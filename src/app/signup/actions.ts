@@ -1,23 +1,16 @@
-'use server';
+'use client';
 
-import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-
-import { createClient } from '@/utils/supabase/server';
 
 interface FormData {
   email: string;
   password: string;
 }
 
+// Mock signup function
 export async function signup(data: FormData) {
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signUp(data);
-
-  if (error) {
-    return { error: true };
-  }
-
-  revalidatePath('/', 'layout');
+  console.log('Signup attempt with:', data);
+  // Just redirect to home page
   redirect('/');
+  return { error: false };
 }
