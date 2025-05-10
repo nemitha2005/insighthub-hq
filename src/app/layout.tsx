@@ -8,8 +8,8 @@ import { Toaster } from '@/components/ui/toaster';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'AeroEdit',
-  description: 'AeroEdit is a powerful team design collaboration app and image editor.',
+  title: 'InsightHub - AI-Powered Business Intelligence',
+  description: 'Turn your business data into actionable insights with AI-powered analytics and intelligence',
 };
 
 export default function RootLayout({
