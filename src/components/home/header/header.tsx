@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import { scrollToElement } from '@/lib/scroll-utils';
 
 interface User {
   id?: string;
@@ -33,6 +34,15 @@ export default function Header({ user }: Props) {
     };
   }, [scrolled]);
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    scrollToElement(id);
+
+    if (isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+  };
+
   return (
     <nav
       className={`transition-all duration-300 sticky top-0 z-50 ${
@@ -47,18 +57,34 @@ export default function Header({ user }: Props) {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex ml-10 space-x-8">
-            <Link href="#features" className="text-muted-foreground hover:text-foreground transition">
+            <a
+              href="#features"
+              onClick={(e) => handleNavClick(e, 'features')}
+              className="text-muted-foreground hover:text-foreground transition cursor-pointer"
+            >
               Features
-            </Link>
-            <Link href="#benefits" className="text-muted-foreground hover:text-foreground transition">
+            </a>
+            <a
+              href="#benefits"
+              onClick={(e) => handleNavClick(e, 'benefits')}
+              className="text-muted-foreground hover:text-foreground transition cursor-pointer"
+            >
               Benefits
-            </Link>
-            <Link href="#demo" className="text-muted-foreground hover:text-foreground transition">
+            </a>
+            <a
+              href="#demo"
+              onClick={(e) => handleNavClick(e, 'demo')}
+              className="text-muted-foreground hover:text-foreground transition cursor-pointer"
+            >
               Demo
-            </Link>
-            <Link href="#faq" className="text-muted-foreground hover:text-foreground transition">
+            </a>
+            <a
+              href="#faq"
+              onClick={(e) => handleNavClick(e, 'faq')}
+              className="text-muted-foreground hover:text-foreground transition cursor-pointer"
+            >
               FAQ
-            </Link>
+            </a>
           </div>
         </div>
 
@@ -92,18 +118,34 @@ export default function Header({ user }: Props) {
       {isMenuOpen && (
         <div className="md:hidden bg-background border-t border-border/40 py-4">
           <div className="flex flex-col space-y-4 px-4">
-            <Link href="#features" className="text-foreground hover:text-blue-400 transition">
+            <a
+              href="#features"
+              onClick={(e) => handleNavClick(e, 'features')}
+              className="text-foreground hover:text-blue-400 transition cursor-pointer"
+            >
               Features
-            </Link>
-            <Link href="#benefits" className="text-foreground hover:text-blue-400 transition">
+            </a>
+            <a
+              href="#benefits"
+              onClick={(e) => handleNavClick(e, 'benefits')}
+              className="text-foreground hover:text-blue-400 transition cursor-pointer"
+            >
               Benefits
-            </Link>
-            <Link href="#demo" className="text-foreground hover:text-blue-400 transition">
+            </a>
+            <a
+              href="#demo"
+              onClick={(e) => handleNavClick(e, 'demo')}
+              className="text-foreground hover:text-blue-400 transition cursor-pointer"
+            >
               Demo
-            </Link>
-            <Link href="#faq" className="text-foreground hover:text-blue-400 transition">
+            </a>
+            <a
+              href="#faq"
+              onClick={(e) => handleNavClick(e, 'faq')}
+              className="text-foreground hover:text-blue-400 transition cursor-pointer"
+            >
               FAQ
-            </Link>
+            </a>
 
             <div className="pt-4 flex flex-col space-y-4">
               <Button variant="outline" asChild={true} className="w-full">
