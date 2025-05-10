@@ -2,8 +2,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 
+interface User {
+  id?: string;
+  email?: string;
+}
+
 interface Props {
-  user: any | null;
+  user: User | null;
 }
 
 export default function Header({ user }: Props) {

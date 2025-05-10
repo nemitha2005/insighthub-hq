@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { useUserInfo } from '@/hooks/useAuth';
 import '../../styles/home-page.css';
 import Header from '@/components/home/header/header';
