@@ -24,7 +24,7 @@ export function HeroSection() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button asChild={true} variant="secondary" size="lg" className="px-8 py-6 text-lg">
-              <Link href="/signup">Sign Up for free</Link>
+              <Link href="/signup">Sign Up Free</Link>
             </Button>
             <Button asChild={true} variant="outline" size="lg" className="px-8 py-6 text-lg group">
               <Link href="#demo" className="flex items-center">
