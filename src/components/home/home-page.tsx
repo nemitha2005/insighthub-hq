@@ -9,7 +9,6 @@ import { HomePageBackground } from '@/components/gradients/home-page-background'
 import { Footer } from '@/components/home/footer/footer';
 
 export function HomePage() {
-  // Use the mock auth hook
   const { user } = useUserInfo();
 
   return (
