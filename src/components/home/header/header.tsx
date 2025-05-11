@@ -52,7 +52,7 @@ export default function Header({ user }: Props) {
       <div className="mx-auto max-w-7xl relative px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         <div className="flex flex-1 items-center justify-start">
           <Link className="flex items-center" href={'/'}>
-            <Image className="w-auto block" src="/logo.png" width={129} height={20} alt="InsightHub" />
+            <Image src="/logo.svg" width={220} height={34} alt="InsightHub" />
           </Link>
 
           {/* Desktop Navigation */}

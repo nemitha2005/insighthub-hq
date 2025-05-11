@@ -13,7 +13,8 @@ export function PoweredByPaddle() {
         }
       >
         <div className={'flex justify-center items-center gap-2'}>
-          <span className={'text-sm leading-[14px]'}>A Next.js template by</span>
+          <span className={'text-sm leading-[14px]'}>All Rights Reserved</span>
+          <span className={'text-sm leading-[14px]'}>Created by Nemitha Wijerathna</span>
           <Image src={'/assets/icons/logo/paddle-white-logo.svg'} alt={'Paddle logo'} width={54} height={14} />
         </div>
         <div className={'flex justify-center items-center gap-2 flex-wrap md:flex-nowrap'}>
