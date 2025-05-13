@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function HeroSection() {
+  const { user } = useAuth();
+
   return (
     <section className="relative min-h-[90vh] flex items-center pt-10 pb-20 overflow-hidden">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
@@ -23,15 +26,26 @@ export function HeroSection() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button asChild={true} variant="secondary" size="lg" className="px-8 py-6 text-lg">
-              <Link href="/signup">Sign Up Free</Link>
-            </Button>
-            <Button asChild={true} variant="outline" size="lg" className="px-8 py-6 text-lg group">
-              <Link href="#demo" className="flex items-center">
-                Go to Dashboard
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
-              </Link>
-            </Button>
+            {!user ? (
+              <>
+                <Button asChild={true} variant="secondary" size="lg" className="px-8 py-6 text-lg">
+                  <Link href="/signup">Sign Up Free</Link>
+                </Button>
+                <Button asChild={true} variant="outline" size="lg" className="px-8 py-6 text-lg group">
+                  <Link href="/login" className="flex items-center">
+                    Get Started
+                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
+                  </Link>
+                </Button>
+              </>
+            ) : (
+              <Button asChild={true} variant="secondary" size="lg" className="px-8 py-6 text-lg group">
+                <Link href="/dashboard" className="flex items-center">
+                  Go to Dashboard
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
       </div>

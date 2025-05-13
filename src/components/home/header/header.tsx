@@ -68,13 +68,6 @@ export default function Header({ user }: Props) {
               Benefits
             </a>
             <a
-              href="#demo"
-              onClick={(e) => handleNavClick(e, 'demo')}
-              className="text-muted-foreground hover:text-foreground transition cursor-pointer"
-            >
-              Dashboard
-            </a>
-            <a
               href="#faq"
               onClick={(e) => handleNavClick(e, 'faq')}
               className="text-muted-foreground hover:text-foreground transition cursor-pointer"

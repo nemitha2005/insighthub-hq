@@ -1,3 +1,5 @@
+// src/components/authentication/sign-up-form.tsx
+
 'use client';
 
 import Image from 'next/image';
@@ -9,6 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { FirebaseError } from 'firebase/app';
 import { Separator } from '@/components/ui/separator';
+import { Loader2 } from 'lucide-react';
 
 export function SignupForm() {
   const { toast } = useToast();
@@ -98,18 +101,22 @@ export function SignupForm() {
         onClick={() => handleGoogleSignup()}
         type={'button'}
         variant={'secondary'}
-        className={'w-full mt-6'}
+        className={'w-full mt-6 relative'}
         disabled={isLoading}
       >
-        <Image
-          height="24"
-          className={'mr-3'}
-          width="24"
-          src="https://cdn.simpleicons.org/google/ffffff"
-          unoptimized={true}
-          alt={'Google logo'}
-        />
-        Sign up with Google
+        {isLoading ? (
+          <Loader2 className="h-5 w-5 animate-spin mr-2" />
+        ) : (
+          <Image
+            height="24"
+            className={'mr-3'}
+            width="24"
+            src="https://cdn.simpleicons.org/google/ffffff"
+            unoptimized={true}
+            alt={'Google logo'}
+          />
+        )}
+        {isLoading ? 'Creating account...' : 'Sign up with Google'}
       </Button>
 
       <div className={'flex w-full items-center justify-center'}>
@@ -125,7 +132,8 @@ export function SignupForm() {
         onPasswordChange={(password) => setPassword(password)}
       />
 
-      <Button type={'submit'} variant={'secondary'} className={'w-full'} disabled={isLoading}>
+      <Button type={'submit'} variant={'secondary'} className={'w-full relative'} disabled={isLoading}>
+        {isLoading && <Loader2 className="h-5 w-5 animate-spin mr-2" />}
         {isLoading ? 'Creating account...' : 'Sign up'}
       </Button>
     </form>
