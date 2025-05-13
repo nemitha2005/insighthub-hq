@@ -100,7 +100,7 @@ export function LoginForm() {
       }}
       className={'px-6 md:px-16 pb-6 py-8 gap-6 flex flex-col items-center justify-center'}
     >
-      <Image src={'/assets/icons/logo/aeroedit-icon.svg'} alt={'InsightHub'} width={80} height={80} />
+      <Image src={'/assets/icons/logo/insighthub-icon.svg'} alt={'InsightHub'} width={80} height={80} />
       <div className={'text-[30px] leading-[36px] font-medium tracking-[-0.6px] text-center'}>
         Log in to your account
       </div>
