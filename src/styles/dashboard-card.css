@@ -1,0 +1,112 @@
+.dashboard-card {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.featured-dashboard-card {
+  position: relative;
+}
+
+.featured-dashboard-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  padding: 1px;
+  background: linear-gradient(180deg, rgba(255, 248, 0, 0.3) 0%, rgba(255, 248, 0, 0) 100%);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.featured-yellow-highlight-bg {
+  content: '';
+  position: absolute;
+  left: 50%;
+  margin-left: -124px;
+  top: -1px;
+  width: 248px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 15%,
+    rgba(255, 248, 0, 0.6) 50%,
+    rgba(255, 255, 255, 0) 85%
+  );
+}
+
+.featured-hard-blur-bg {
+  width: 88px;
+  height: 4px;
+  position: absolute;
+  left: 50%;
+  margin-left: -44px;
+  top: -2px;
+  background: #fff800;
+  opacity: 0.5;
+  filter: blur(12px);
+}
+
+.featured-vertical-hard-blur-bg {
+  position: absolute;
+  top: -140px;
+  left: 50%;
+  margin-left: -64px;
+  width: 128px;
+  height: 280px;
+  border-radius: 280px;
+  opacity: 0.1;
+  background: #fff800;
+  filter: blur(48px);
+}
+
+.featured-soft-blur-bg {
+  position: absolute;
+  top: -19px;
+  left: 50%;
+  margin-left: -192px;
+  width: 384px;
+  height: 37px;
+  border-radius: 384px;
+  opacity: 0.3;
+  background: #fff800;
+  filter: blur(32px);
+}
+
+.dashboard-stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}

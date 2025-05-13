@@ -58,7 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         <div className="min-h-screen flex items-center justify-center bg-background">
           <div className="flex flex-col items-center">
             <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
-            <p className="text-muted-foreground">Loading authentication...</p>
+            <p className="text-muted-foreground">Loading...</p>
           </div>
         </div>
       ) : (

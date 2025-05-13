@@ -32,14 +32,16 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-        <p className="text-muted-foreground">Welcome back! Here's an overview of your business data.</p>
+      <div className="mb-10">
+        <h2 className="text-xl font-bold mb-2">Your Dashboard</h2>
+        <p className="text-muted-foreground">
+          View insights, analyze data and create reports with AI-powered business intelligence
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2">
-          <DashboardCard title="Analytics Overview" className="h-full">
+          <DashboardCard title="Analytics Overview" className="h-full" featured={true}>
             <div className="flex flex-col items-center justify-center min-h-[300px] text-center p-4">
               <TrendingUp className="h-16 w-16 text-muted-foreground mb-4" />
               <h3 className="text-xl font-medium mb-2">No data to analyze yet</h3>
