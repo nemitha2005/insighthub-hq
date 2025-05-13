@@ -11,6 +11,7 @@ import {
 } from 'firebase/auth';
 import { auth, googleProvider } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
+import { createOrUpdateUser } from '@/services/userService';
 
 type AuthContextType = {
   user: User | null;
@@ -37,15 +38,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signUp = async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await createOrUpdateUser(userCredential.user, 'email');
+      console.log('User document created after email signup');
+    } catch (error) {
+      console.error('Error during signup:', error);
+      throw error;
+    }
   };
 
   const signIn = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      await createOrUpdateUser(userCredential.user, 'email');
+      console.log('User document updated after email login');
+    } catch (error) {
+      console.error('Error during email sign in:', error);
+      throw error;
+    }
   };
 
   const signInWithGoogle = async () => {
-    await signInWithPopup(auth, googleProvider);
+    try {
+      const userCredential = await signInWithPopup(auth, googleProvider);
+
+      await createOrUpdateUser(userCredential.user, 'google');
+      console.log('User document created/updated after Google login');
+    } catch (error) {
+      console.error('Error during Google sign in:', error);
+      throw error;
+    }
   };
 
   const logout = async () => {

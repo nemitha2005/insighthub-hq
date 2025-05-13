@@ -1,5 +1,3 @@
-// src/components/authentication/sign-up-form.tsx
-
 'use client';
 
 import Image from 'next/image';
@@ -63,7 +61,10 @@ export function SignupForm() {
     } catch (error) {
       console.error('Google signup error:', error);
       toast({
-        description: 'Failed to sign up with Google. Please try again.',
+        description:
+          error instanceof FirebaseError
+            ? getFirebaseErrorMessage(error.code)
+            : 'Failed to sign up with Google. Please try again.',
         variant: 'destructive',
       });
     } finally {
@@ -81,6 +82,18 @@ export function SignupForm() {
         return 'Password is too weak. It should be at least 6 characters';
       case 'auth/operation-not-allowed':
         return 'Email/password accounts are not enabled';
+      case 'auth/popup-closed-by-user':
+        return 'Sign-up popup was closed before completing';
+      case 'auth/popup-blocked':
+        return 'Sign-up popup was blocked by the browser';
+      case 'auth/cancelled-popup-request':
+        return 'Sign-up was cancelled';
+      case 'auth/account-exists-with-different-credential':
+        return 'An account already exists with the same email but different sign-in credentials';
+      case 'firestore/permission-denied':
+        return 'Database error. Please try again later.';
+      case 'firestore/unavailable':
+        return 'Database temporarily unavailable. Please try again later.';
       default:
         return 'Failed to create account. Please try again';
     }

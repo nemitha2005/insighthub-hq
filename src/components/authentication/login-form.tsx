@@ -1,5 +1,3 @@
-// src/components/authentication/login-form.tsx
-
 'use client';
 
 import Image from 'next/image';
@@ -11,7 +9,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { FirebaseError } from 'firebase/app';
-import { Loader2 } from 'lucide-react'; // Import for loading spinner
+import { Loader2 } from 'lucide-react';
 
 export function LoginForm() {
   const { toast } = useToast();
@@ -55,7 +53,10 @@ export function LoginForm() {
     } catch (error) {
       console.error('Google login error:', error);
       toast({
-        description: 'Failed to login with Google. Please try again.',
+        description:
+          error instanceof FirebaseError
+            ? getFirebaseErrorMessage(error.code)
+            : 'Failed to login with Google. Please try again.',
         variant: 'destructive',
       });
     } finally {
@@ -74,6 +75,18 @@ export function LoginForm() {
         return 'Invalid email or password';
       case 'auth/too-many-requests':
         return 'Too many failed login attempts. Please try again later';
+      case 'auth/popup-closed-by-user':
+        return 'Sign-in popup was closed before completing the sign in';
+      case 'auth/popup-blocked':
+        return 'Sign-in popup was blocked by the browser';
+      case 'auth/cancelled-popup-request':
+        return 'Sign-in was cancelled';
+      case 'auth/account-exists-with-different-credential':
+        return 'An account already exists with the same email but different sign-in credentials';
+      case 'firestore/permission-denied':
+        return 'Database error. Please try again later.';
+      case 'firestore/unavailable':
+        return 'Database temporarily unavailable. Please try again later.';
       default:
         return 'Failed to login. Please check your credentials';
     }
