@@ -2,41 +2,108 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { login, loginAnonymously } from '@/app/login/actions';
 import { useState } from 'react';
 import { AuthenticationForm } from '@/components/authentication/authentication-form';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/components/ui/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
+import { FirebaseError } from 'firebase/app';
 
 export function LoginForm() {
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { signIn, signInWithGoogle } = useAuth();
+  const router = useRouter();
 
-  function handleLogin() {
-    login({ email, password }).then((data) => {
-      if (data?.error) {
-        toast({ description: 'Invalid email or password', variant: 'destructive' });
-      }
-    });
+  async function handleLogin() {
+    if (!email || !password) {
+      toast({
+        description: 'Please enter both email and password',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      await signIn(email, password);
+      toast({ description: 'Logged in successfully' });
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Login error:', error);
+      const errorMessage =
+        error instanceof FirebaseError ? getFirebaseErrorMessage(error.code) : 'An unexpected error occurred';
+
+      toast({ description: errorMessage, variant: 'destructive' });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
-  function handleAnonymousLogin() {
-    loginAnonymously().then((data) => {
-      if (data?.error) {
-        toast({ description: 'Something went wrong. Please try again', variant: 'destructive' });
-      }
-    });
+  async function handleGoogleLogin() {
+    try {
+      setIsLoading(true);
+      await signInWithGoogle();
+      toast({ description: 'Logged in successfully' });
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Google login error:', error);
+      toast({
+        description: 'Failed to login with Google. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  function getFirebaseErrorMessage(errorCode: string): string {
+    switch (errorCode) {
+      case 'auth/invalid-email':
+        return 'Invalid email address';
+      case 'auth/user-disabled':
+        return 'This account has been disabled';
+      case 'auth/user-not-found':
+      case 'auth/wrong-password':
+        return 'Invalid email or password';
+      case 'auth/too-many-requests':
+        return 'Too many failed login attempts. Please try again later';
+      default:
+        return 'Failed to login. Please check your credentials';
+    }
   }
 
   return (
-    <form action={'#'} className={'px-6 md:px-16 pb-6 py-8 gap-6 flex flex-col items-center justify-center'}>
-      <Image src={'/assets/icons/logo/aeroedit-icon.svg'} alt={'AeroEdit'} width={80} height={80} />
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleLogin();
+      }}
+      className={'px-6 md:px-16 pb-6 py-8 gap-6 flex flex-col items-center justify-center'}
+    >
+      <Image src={'/assets/icons/logo/aeroedit-icon.svg'} alt={'InsightHub'} width={80} height={80} />
       <div className={'text-[30px] leading-[36px] font-medium tracking-[-0.6px] text-center'}>
         Log in to your account
       </div>
-      <Button onClick={() => handleAnonymousLogin()} type={'button'} variant={'secondary'} className={'w-full mt-6'}>
-        Log in as Guest
+      <Button
+        onClick={() => handleGoogleLogin()}
+        type={'button'}
+        variant={'secondary'}
+        className={'w-full mt-6'}
+        disabled={isLoading}
+      >
+        <Image
+          height="24"
+          className={'mr-3'}
+          width="24"
+          src="https://cdn.simpleicons.org/google/ffffff"
+          unoptimized={true}
+          alt={'Google logo'}
+        />
+        Log in with Google
       </Button>
       <div className={'flex w-full items-center justify-center'}>
         <Separator className={'w-5/12 bg-border'} />
@@ -49,8 +116,8 @@ export function LoginForm() {
         password={password}
         onPasswordChange={(password) => setPassword(password)}
       />
-      <Button formAction={() => handleLogin()} type={'submit'} variant={'secondary'} className={'w-full'}>
-        Log in
+      <Button type={'submit'} variant={'secondary'} className={'w-full'} disabled={isLoading}>
+        {isLoading ? 'Logging in...' : 'Log in'}
       </Button>
     </form>
   );

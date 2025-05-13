@@ -1,6 +1,6 @@
 'use client';
 
-import { useUserInfo } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import '../../styles/home-page.css';
 import Header from '@/components/home/header/header';
 import { HeroSection } from '@/components/home/hero-section/hero-section';
@@ -11,13 +11,13 @@ import { HomePageBackground } from '@/components/gradients/home-page-background'
 import { Footer } from '@/components/home/footer/footer';
 
 export function HomePage() {
-  const { user } = useUserInfo();
+  const { user, loading } = useAuth();
 
   return (
     <>
       <div>
         <HomePageBackground />
-        <Header user={user} />
+        <Header user={loading ? null : user} />
         <HeroSection />
         <FeaturesSection />
         <BenefitsSection />

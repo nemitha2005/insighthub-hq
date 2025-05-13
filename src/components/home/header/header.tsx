@@ -6,11 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { scrollToElement } from '@/lib/scroll-utils';
-
-interface User {
-  id?: string;
-  email?: string;
-}
+import { User } from 'firebase/auth'; // Import Firebase User type
 
 interface Props {
   user: User | null;
@@ -51,7 +47,7 @@ export default function Header({ user }: Props) {
     >
       <div className="mx-auto max-w-7xl relative px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         <div className="flex flex-1 items-center justify-start">
-          <Link className="flex items-center" href={'/'}>
+          <Link className="flex items-center" href="/">
             <Image src="/logo.svg" width={220} height={34} alt="InsightHub" />
           </Link>
 
@@ -97,7 +93,7 @@ export default function Header({ user }: Props) {
 
         {/* Desktop CTA */}
         <div className="hidden md:flex space-x-4">
-          {user?.id ? (
+          {user ? (
             <Button variant="secondary" asChild={true}>
               <Link href="/dashboard">Dashboard</Link>
             </Button>
@@ -148,12 +144,20 @@ export default function Header({ user }: Props) {
             </a>
 
             <div className="pt-4 flex flex-col space-y-4">
-              <Button variant="outline" asChild={true} className="w-full">
-                <Link href="/login">Login</Link>
-              </Button>
-              <Button asChild={true} variant="secondary" className="w-full">
-                <Link href="/signup">Sign Up Free</Link>
-              </Button>
+              {user ? (
+                <Button variant="secondary" asChild={true} className="w-full">
+                  <Link href="/dashboard">Dashboard</Link>
+                </Button>
+              ) : (
+                <>
+                  <Button variant="outline" asChild={true} className="w-full">
+                    <Link href="/login">Login</Link>
+                  </Button>
+                  <Button asChild={true} variant="secondary" className="w-full">
+                    <Link href="/signup">Sign Up Free</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
