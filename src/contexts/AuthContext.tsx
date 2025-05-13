@@ -8,10 +8,13 @@ import {
   signOut,
   onAuthStateChanged,
   signInWithPopup,
+  updateProfile,
 } from 'firebase/auth';
 import { auth, googleProvider } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
 import { createOrUpdateUser } from '@/services/userService';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 type AuthContextType = {
   user: User | null;
@@ -29,8 +32,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
-      setUser(authUser);
+    const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
+      if (authUser) {
+        try {
+          const userDoc = await getDoc(doc(db, 'users', authUser.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+
+            if (userData.photoURL && !authUser.photoURL) {
+              await updateProfile(authUser, {
+                photoURL: userData.photoURL,
+              });
+              setUser({ ...authUser, photoURL: userData.photoURL });
+            } else {
+              setUser(authUser);
+            }
+
+            console.log('User data from Firestore:', userData);
+            console.log('Current user photo URL:', authUser.photoURL);
+          } else {
+            setUser(authUser);
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          setUser(authUser);
+        }
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
 
@@ -62,9 +91,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signInWithGoogle = async () => {
     try {
       const userCredential = await signInWithPopup(auth, googleProvider);
-
       await createOrUpdateUser(userCredential.user, 'google');
       console.log('User document created/updated after Google login');
+      console.log('Google profile photo URL:', userCredential.user.photoURL);
     } catch (error) {
       console.error('Error during Google sign in:', error);
       throw error;

@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { scrollToElement } from '@/lib/scroll-utils';
-import { User } from 'firebase/auth'; // Import Firebase User type
+import { User } from 'firebase/auth';
+import { ProfileDropdown } from '@/components/dashboard/profile-dropdown';
 
 interface Props {
   user: User | null;
@@ -85,11 +86,14 @@ export default function Header({ user }: Props) {
         </div>
 
         {/* Desktop CTA */}
-        <div className="hidden md:flex space-x-4">
+        <div className="hidden md:flex space-x-4 items-center">
           {user ? (
-            <Button variant="secondary" asChild={true}>
-              <Link href="/dashboard">Dashboard</Link>
-            </Button>
+            <>
+              <Button variant="secondary" asChild={true} className="mr-2">
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
+              <ProfileDropdown />
+            </>
           ) : (
             <>
               <Button variant="outline" asChild={true}>
@@ -122,13 +126,6 @@ export default function Header({ user }: Props) {
               Benefits
             </a>
             <a
-              href="#demo"
-              onClick={(e) => handleNavClick(e, 'demo')}
-              className="text-foreground hover:text-blue-400 transition cursor-pointer"
-            >
-              Demo
-            </a>
-            <a
               href="#faq"
               onClick={(e) => handleNavClick(e, 'faq')}
               className="text-foreground hover:text-blue-400 transition cursor-pointer"
@@ -138,9 +135,12 @@ export default function Header({ user }: Props) {
 
             <div className="pt-4 flex flex-col space-y-4">
               {user ? (
-                <Button variant="secondary" asChild={true} className="w-full">
-                  <Link href="/dashboard">Dashboard</Link>
-                </Button>
+                <>
+                  <Button variant="secondary" asChild={true} className="w-full">
+                    <Link href="/dashboard">Dashboard</Link>
+                  </Button>
+                  <ProfileDropdown />
+                </>
               ) : (
                 <>
                   <Button variant="outline" asChild={true} className="w-full">

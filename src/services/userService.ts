@@ -15,6 +15,8 @@ export interface UserData {
 export async function createOrUpdateUser(user: User, authProvider: string = 'email'): Promise<void> {
   if (!user.uid) return;
 
+  console.log('Creating/updating user with photo URL:', user.photoURL);
+
   const userRef = doc(db, 'users', user.uid);
   const userSnap = await getDoc(userRef);
 
@@ -32,18 +34,16 @@ export async function createOrUpdateUser(user: User, authProvider: string = 'ema
     };
 
     await setDoc(userRef, userData);
-    console.log('New user document created in Firestore');
+    console.log('New user document created in Firestore with data:', userData);
   } else {
-    await setDoc(
-      userRef,
-      {
-        lastLogin: timestamp,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        email: user.email,
-      },
-      { merge: true },
-    );
-    console.log('User document updated in Firestore');
+    const updateData = {
+      lastLogin: timestamp,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      email: user.email,
+    };
+
+    await setDoc(userRef, updateData, { merge: true });
+    console.log('User document updated in Firestore with data:', updateData);
   }
 }

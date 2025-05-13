@@ -2,11 +2,12 @@ import { ReactNode } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Home, LogOut } from 'lucide-react';
+import { Home } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { DashboardGradient } from '@/components/gradients/dashboard-gradient';
 import { Footer } from '@/components/home/footer/footer';
 import Image from 'next/image';
+import { ProfileDropdown } from '@/components/dashboard/profile-dropdown';
 import '../../styles/dashboard.css';
 import '../../styles/dashboard-card.css';
 
@@ -15,17 +16,8 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      router.push('/');
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-[#0B131380] flex flex-col">
@@ -37,7 +29,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </Link>
 
         <div className="flex items-center gap-4">
-          <p className="text-muted-foreground mr-2">
+          <p className="text-muted-foreground mr-2 hidden md:block">
             Welcome,{' '}
             <span className="font-medium text-foreground">
               {user?.displayName || user?.email?.split('@')[0] || 'User'}
@@ -49,10 +41,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <span>Home</span>
             </Link>
           </Button>
-          <Button variant="secondary" size="sm" onClick={handleLogout} className="flex items-center gap-1">
-            <LogOut size={16} />
-            <span>Logout</span>
-          </Button>
+          <ProfileDropdown />
         </div>
       </div>
 
