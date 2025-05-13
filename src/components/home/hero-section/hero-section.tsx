@@ -28,7 +28,7 @@ export function HeroSection() {
             </Button>
             <Button asChild={true} variant="outline" size="lg" className="px-8 py-6 text-lg group">
               <Link href="#demo" className="flex items-center">
-                See Demo
+                Go to Dashboard
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
               </Link>
             </Button>

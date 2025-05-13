@@ -72,7 +72,7 @@ export default function Header({ user }: Props) {
               onClick={(e) => handleNavClick(e, 'demo')}
               className="text-muted-foreground hover:text-foreground transition cursor-pointer"
             >
-              Demo
+              Dashboard
             </a>
             <a
               href="#faq"
