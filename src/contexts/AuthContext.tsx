@@ -10,6 +10,7 @@ import {
   signInWithPopup,
 } from 'firebase/auth';
 import { auth, googleProvider } from '@/lib/firebase';
+import { Loader2 } from 'lucide-react';
 
 type AuthContextType = {
   user: User | null;
@@ -53,7 +54,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider value={{ user, loading, signUp, signIn, signInWithGoogle, logout }}>
-      {children}
+      {loading ? (
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <div className="flex flex-col items-center">
+            <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
+            <p className="text-muted-foreground">Loading authentication...</p>
+          </div>
+        </div>
+      ) : (
+        children
+      )}
     </AuthContext.Provider>
   );
 }
