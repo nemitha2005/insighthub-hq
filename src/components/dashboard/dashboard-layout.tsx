@@ -31,8 +31,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     <div className="min-h-screen bg-[#0B131380] flex flex-col">
       <DashboardGradient />
 
-      {/* Top Navigation */}
-      <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center gap-4 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-4 relative z-10">
         <Link href="/" className="flex items-center">
           <Image src="/logo.svg" width={220} height={34} alt="InsightHub" />
         </Link>
@@ -57,10 +56,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
       </div>
 
-      {/* Main Content */}
-      <main className="flex-grow container mx-auto px-4 py-6 relative z-10">{children}</main>
+      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">{children}</main>
 
-      {/* Footer */}
       <div className="relative z-10">
         <Footer />
       </div>

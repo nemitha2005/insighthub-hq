@@ -86,24 +86,26 @@
 .dashboard-stats-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .stat-card {
   background: rgba(255, 255, 255, 0.03);
   border-radius: 8px;
-  padding: 1rem;
+  padding: 1.5rem;
   transition: all 0.3s ease;
+  border: 1px solid var(--border);
 }
 
 .stat-card:hover {
   background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 248, 0, 0.2);
 }
 
 .stat-value {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 600;
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 .stat-label {
