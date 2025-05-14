@@ -10,12 +10,16 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { FirebaseError } from 'firebase/app';
 import { Loader2 } from 'lucide-react';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 export function LoginForm() {
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
+  const [passwordResetMode, setPasswordResetMode] = useState(false);
   const { signIn, signInWithGoogle } = useAuth();
   const router = useRouter();
 
@@ -41,6 +45,33 @@ export function LoginForm() {
       toast({ description: errorMessage, variant: 'destructive' });
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  async function handleResetPassword() {
+    if (!email) {
+      toast({
+        description: 'Please enter your email to reset your password',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      setIsResettingPassword(true);
+      await sendPasswordResetEmail(auth, email);
+      toast({
+        description: 'Password reset email sent. Please check your inbox.',
+      });
+      setPasswordResetMode(false);
+    } catch (error) {
+      console.error('Password reset error:', error);
+      const errorMessage =
+        error instanceof FirebaseError ? getFirebaseErrorMessage(error.code) : 'An unexpected error occurred';
+
+      toast({ description: errorMessage, variant: 'destructive' });
+    } finally {
+      setIsResettingPassword(false);
     }
   }
 
@@ -83,6 +114,10 @@ export function LoginForm() {
         return 'Sign-in was cancelled';
       case 'auth/account-exists-with-different-credential':
         return 'An account already exists with the same email but different sign-in credentials';
+      case 'auth/missing-email':
+        return 'Please provide an email address';
+      case 'auth/email-already-in-use':
+        return 'This email is already registered';
       case 'firestore/permission-denied':
         return 'Database error. Please try again later.';
       case 'firestore/unavailable':
@@ -96,50 +131,95 @@ export function LoginForm() {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        handleLogin();
+        if (passwordResetMode) {
+          handleResetPassword();
+        } else {
+          handleLogin();
+        }
       }}
       className={'px-6 md:px-16 pb-6 py-8 gap-6 flex flex-col items-center justify-center'}
     >
       <Image src={'/assets/icons/logo/insighthub-icon.svg'} alt={'InsightHub'} width={80} height={80} />
       <div className={'text-[30px] leading-[36px] font-medium tracking-[-0.6px] text-center'}>
-        Log in to your account
+        {passwordResetMode ? 'Reset your password' : 'Log in to your account'}
       </div>
-      <Button
-        onClick={() => handleGoogleLogin()}
-        type={'button'}
-        variant={'secondary'}
-        className={'w-full mt-6 relative'}
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <Loader2 className="h-5 w-5 animate-spin mr-2" />
-        ) : (
-          <Image
-            height="24"
-            className={'mr-3'}
-            width="24"
-            src="https://cdn.simpleicons.org/google/ffffff"
-            unoptimized={true}
-            alt={'Google logo'}
-          />
-        )}
-        {isLoading ? 'Logging in...' : 'Log in with Google'}
-      </Button>
-      <div className={'flex w-full items-center justify-center'}>
-        <Separator className={'w-5/12 bg-border'} />
-        <div className={'text-border text-xs font-medium px-4'}>or</div>
-        <Separator className={'w-5/12 bg-border'} />
-      </div>
+
+      {!passwordResetMode && (
+        <>
+          <Button
+            onClick={() => handleGoogleLogin()}
+            type={'button'}
+            variant={'secondary'}
+            className={'w-full mt-6 relative'}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin mr-2" />
+            ) : (
+              <Image
+                height="24"
+                className={'mr-3'}
+                width="24"
+                src="https://cdn.simpleicons.org/google/ffffff"
+                unoptimized={true}
+                alt={'Google logo'}
+              />
+            )}
+            {isLoading ? 'Logging in...' : 'Log in with Google'}
+          </Button>
+          <div className={'flex w-full items-center justify-center'}>
+            <Separator className={'w-5/12 bg-border'} />
+            <div className={'text-border text-xs font-medium px-4'}>or</div>
+            <Separator className={'w-5/12 bg-border'} />
+          </div>
+        </>
+      )}
+
       <AuthenticationForm
         email={email}
         onEmailChange={(email) => setEmail(email)}
         password={password}
         onPasswordChange={(password) => setPassword(password)}
+        passwordVisible={!passwordResetMode}
       />
-      <Button type={'submit'} variant={'secondary'} className={'w-full relative'} disabled={isLoading}>
-        {isLoading && <Loader2 className="h-5 w-5 animate-spin mr-2" />}
-        {isLoading ? 'Logging in...' : 'Log in'}
+
+      <Button
+        type={'submit'}
+        variant={'secondary'}
+        className={'w-full relative'}
+        disabled={isLoading || isResettingPassword}
+      >
+        {(isLoading || isResettingPassword) && <Loader2 className="h-5 w-5 animate-spin mr-2" />}
+        {isLoading
+          ? 'Logging in...'
+          : isResettingPassword
+            ? 'Sending reset email...'
+            : passwordResetMode
+              ? 'Send reset email'
+              : 'Log in'}
       </Button>
+
+      <div className="w-full text-center mt-2">
+        {passwordResetMode ? (
+          <Button
+            type="button"
+            variant="link"
+            className="text-sm text-muted-foreground hover:text-foreground"
+            onClick={() => setPasswordResetMode(false)}
+          >
+            Back to login
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            variant="link"
+            className="text-sm text-muted-foreground hover:text-foreground"
+            onClick={() => setPasswordResetMode(true)}
+          >
+            Forgot password?
+          </Button>
+        )}
+      </div>
     </form>
   );
 }
