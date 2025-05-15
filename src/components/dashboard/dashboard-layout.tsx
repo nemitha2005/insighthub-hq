@@ -2,8 +2,9 @@ import { ReactNode } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Home } from 'lucide-react';
+import { Home, Database, BarChart, FileText, Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation'; // Add this import
 import { DashboardGradient } from '@/components/gradients/dashboard-gradient';
 import { Footer } from '@/components/home/footer/footer';
 import Image from 'next/image';
@@ -18,6 +19,15 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { user } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+
+  const navItems = [
+    { name: 'Dashboard', href: '/dashboard', icon: <Home size={18} /> },
+    { name: 'Data', href: '/dashboard/data', icon: <Database size={18} /> },
+    { name: 'Analytics', href: '/dashboard/analytics', icon: <BarChart size={18} />, disabled: true },
+    { name: 'Reports', href: '/dashboard/reports', icon: <FileText size={18} />, disabled: true },
+    { name: 'Settings', href: '/dashboard/settings', icon: <Settings size={18} />, disabled: true },
+  ];
 
   return (
     <div className="min-h-screen bg-[#0B131380] flex flex-col">
@@ -35,13 +45,37 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               {user?.displayName || user?.email?.split('@')[0] || 'User'}
             </span>
           </p>
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/" className="flex items-center gap-1">
-              <Home size={16} />
-              <span>Home</span>
-            </Link>
-          </Button>
           <ProfileDropdown />
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-4 relative z-10">
+        <div className="flex flex-wrap space-x-1 md:space-x-2 mb-8 overflow-x-auto pb-2">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Button
+                key={item.href}
+                variant={isActive ? 'secondary' : 'outline'}
+                size="sm"
+                asChild={!item.disabled}
+                disabled={item.disabled}
+                className={`${isActive ? 'bg-accent' : ''}`}
+              >
+                {!item.disabled ? (
+                  <Link href={item.href} className="flex items-center gap-1">
+                    {item.icon}
+                    <span>{item.name}</span>
+                  </Link>
+                ) : (
+                  <div className="flex items-center gap-1 opacity-50">
+                    {item.icon}
+                    <span>{item.name}</span>
+                  </div>
+                )}
+              </Button>
+            );
+          })}
         </div>
       </div>
 
