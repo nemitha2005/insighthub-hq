@@ -41,7 +41,7 @@ SAMPLE DATA (first row): ${JSON.stringify(sampleData, null, 2)}
 
 TASK: Convert this natural language query into a chart configuration.
 
-RESPONSE FORMAT (JSON only, no markdown):
+RESPONSE FORMAT (JSON only, no markdown or code blocks):
 {
   "success": true,
   "chartType": "bar" | "line" | "pie",
@@ -51,6 +51,8 @@ RESPONSE FORMAT (JSON only, no markdown):
   "title": "Chart Title",
   "description": "Brief description of what the chart shows"
 }
+
+IMPORTANT: Return only valid JSON without any markdown formatting, code blocks, or additional text.
 
 RULES:
 1. Choose the most appropriate chart type for the query
@@ -72,7 +74,17 @@ Examples:
     const text = response.text();
 
     try {
-      const parsed = JSON.parse(text.trim());
+      let cleanText = text.trim();
+
+      if (cleanText.startsWith('```json')) {
+        cleanText = cleanText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+      } else if (cleanText.startsWith('```')) {
+        cleanText = cleanText.replace(/^```\s*/, '').replace(/\s*```$/, '');
+      }
+
+      console.log('Cleaned AI response:', cleanText);
+
+      const parsed = JSON.parse(cleanText);
 
       if (parsed.success === false) {
         return {
@@ -102,6 +114,7 @@ Examples:
       };
     } catch (parseError) {
       console.error('Failed to parse AI response:', text);
+      console.error('Parse error details:', parseError);
       return {
         success: false,
         message: 'Unable to understand the query. Please try rephrasing.',
@@ -110,6 +123,24 @@ Examples:
     }
   } catch (error) {
     console.error('Gemini API error:', error);
+
+    if (error instanceof Error) {
+      if (error.message.includes('API key')) {
+        return {
+          success: false,
+          message: 'API key issue. Please check your Gemini configuration.',
+          error: error.message,
+        };
+      }
+      if (error.message.includes('quota') || error.message.includes('limit')) {
+        return {
+          success: false,
+          message: 'API quota exceeded. Please try again later.',
+          error: error.message,
+        };
+      }
+    }
+
     return {
       success: false,
       message: 'AI service temporarily unavailable. Please try again.',
@@ -129,7 +160,7 @@ export function generateExampleQueries(columns: string[]): string[] {
       col.toLowerCase().includes('year'),
   );
 
-  const numericSuggestions = ['sales', 'revenue', 'amount', 'price', 'quantity', 'total'];
+  const numericSuggestions = ['sales', 'revenue', 'amount', 'price', 'quantity', 'total', 'salary', 'age'];
   const numericColumns = columns.filter((col) =>
     numericSuggestions.some((suggestion) => col.toLowerCase().includes(suggestion)),
   );
@@ -139,7 +170,9 @@ export function generateExampleQueries(columns: string[]): string[] {
       col.toLowerCase().includes('category') ||
       col.toLowerCase().includes('type') ||
       col.toLowerCase().includes('product') ||
-      col.toLowerCase().includes('region'),
+      col.toLowerCase().includes('region') ||
+      col.toLowerCase().includes('department') ||
+      col.toLowerCase().includes('name'),
   );
 
   if (dateColumns.length > 0 && numericColumns.length > 0) {

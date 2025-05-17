@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BarChart as BarChartIcon, PieChart as PieChartIcon, LineChart as LineChartIcon } from 'lucide-react';
 import { detectColumnTypes } from '@/services/analysisService';
+import { ChartConfig } from '@/lib/gemini';
 import {
   BarChart,
   Bar,
@@ -24,6 +25,7 @@ import {
 
 interface BasicChartsProps {
   data: Record<string, any>[];
+  aiConfig?: ChartConfig;
 }
 
 interface ChartDataPoint {
@@ -34,76 +36,99 @@ interface ChartDataPoint {
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#FFC658', '#FF7C7C'];
 
-export function BasicCharts({ data }: BasicChartsProps) {
+export function BasicCharts({ data, aiConfig }: BasicChartsProps) {
   const [chartType, setChartType] = useState('bar');
   const [xAxisColumn, setXAxisColumn] = useState<string | null>(null);
   const [yAxisColumn, setYAxisColumn] = useState<string | null>(null);
+  const [aggregation, setAggregation] = useState<'sum' | 'average' | 'count' | 'max' | 'min'>('sum');
+  const [chartTitle, setChartTitle] = useState<string>('');
 
   const columnTypes = useMemo(() => detectColumnTypes(data), [data]);
   const columns = Object.keys(columnTypes);
 
-  useMemo(() => {
-    if (!xAxisColumn && columns.length > 0) {
-      setXAxisColumn(columns[0]);
+  useEffect(() => {
+    if (aiConfig) {
+      setChartType(aiConfig.chartType);
+      setXAxisColumn(aiConfig.xAxis);
+      setYAxisColumn(aiConfig.yAxis);
+      setAggregation(aiConfig.aggregation);
+      setChartTitle(aiConfig.title);
     }
+  }, [aiConfig]);
 
-    if (!yAxisColumn) {
-      const numericColumn = columns.find((col) => columnTypes[col]?.type === 'number');
-      setYAxisColumn(numericColumn || columns[1] || columns[0]);
+  useMemo(() => {
+    if (!aiConfig) {
+      if (!xAxisColumn && columns.length > 0) {
+        setXAxisColumn(columns[0]);
+      }
+
+      if (!yAxisColumn) {
+        const numericColumn = columns.find((col) => columnTypes[col]?.type === 'number');
+        setYAxisColumn(numericColumn || columns[1] || columns[0]);
+      }
+
+      if (!chartTitle) {
+        setChartTitle('Data Visualization');
+      }
     }
-  }, [columns, columnTypes, xAxisColumn, yAxisColumn]);
+  }, [columns, columnTypes, xAxisColumn, yAxisColumn, chartTitle, aiConfig]);
 
   const chartData: ChartDataPoint[] = useMemo(() => {
-    console.log('=== CHART DEBUG ===');
-    console.log('Raw data:', data);
-    console.log('Raw data length:', data.length);
-    console.log('Sample raw data:', data.slice(0, 2));
-    console.log('xAxisColumn:', xAxisColumn);
-    console.log('yAxisColumn:', yAxisColumn);
-    console.log('columns:', columns);
-    console.log('columnTypes:', columnTypes);
-
     if (!xAxisColumn || !yAxisColumn || data.length === 0) {
-      console.log('Early return - missing required data');
       return [];
     }
 
-    const groupedData = new Map<string, number>();
-    const limitedData = data.slice(0, 20);
+    const groupedData = new Map<string, number[]>();
+    const limitedData = data.slice(0, 50);
 
     limitedData.forEach((row) => {
-      const xValue = String(row[xAxisColumn] || 'Undefined').slice(0, 20);
+      const xValue = String(row[xAxisColumn] || 'Undefined').slice(0, 30);
       const yValue = parseFloat(row[yAxisColumn]);
 
-      console.log('Processing row:', { xValue, yValue, row });
-
       if (!isNaN(yValue)) {
-        if (groupedData.has(xValue)) {
-          groupedData.set(xValue, groupedData.get(xValue)! + yValue);
-        } else {
-          groupedData.set(xValue, yValue);
+        if (!groupedData.has(xValue)) {
+          groupedData.set(xValue, []);
         }
+        groupedData.get(xValue)!.push(yValue);
       }
     });
 
     const result = Array.from(groupedData.entries())
-      .map(([key, value]) => {
+      .map(([key, values]) => {
+        let aggregatedValue: number;
+
+        switch (aggregation) {
+          case 'sum':
+            aggregatedValue = values.reduce((sum, val) => sum + val, 0);
+            break;
+          case 'average':
+            aggregatedValue = values.reduce((sum, val) => sum + val, 0) / values.length;
+            break;
+          case 'count':
+            aggregatedValue = values.length;
+            break;
+          case 'max':
+            aggregatedValue = Math.max(...values);
+            break;
+          case 'min':
+            aggregatedValue = Math.min(...values);
+            break;
+          default:
+            aggregatedValue = values.reduce((sum, val) => sum + val, 0);
+        }
+
         const dataPoint: ChartDataPoint = {
           name: key,
-          value: value,
+          value: aggregatedValue,
         };
         dataPoint[xAxisColumn] = key;
-        dataPoint[yAxisColumn] = value;
+        dataPoint[yAxisColumn] = aggregatedValue;
         return dataPoint;
       })
       .sort((a, b) => Number(b[yAxisColumn]) - Number(a[yAxisColumn]));
 
-    console.log('Final chartData:', result);
-    console.log('Chart data length:', result.length);
-    console.log('=== END CHART DEBUG ===');
-
     return result;
-  }, [data, xAxisColumn, yAxisColumn]);
+  }, [data, xAxisColumn, yAxisColumn, aggregation]);
 
   if (data.length === 0) {
     return (
@@ -114,11 +139,11 @@ export function BasicCharts({ data }: BasicChartsProps) {
   }
 
   const formatTooltipValue = (value: number) => {
-    return new Intl.NumberFormat().format(value);
+    return new Intl.NumberFormat().format(Number(value.toFixed(2)));
   };
 
   const formatAxisValue = (value: string) => {
-    return value.length > 10 ? `${value.slice(0, 10)}...` : value;
+    return value.length > 15 ? `${value.slice(0, 15)}...` : value;
   };
 
   const hasValidData = chartData.length > 0 && xAxisColumn && yAxisColumn;
@@ -127,10 +152,14 @@ export function BasicCharts({ data }: BasicChartsProps) {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Visualize Your Data</CardTitle>
+          <CardTitle className="flex items-center justify-between">
+            <span>{chartTitle}</span>
+            {aiConfig && <span className="text-sm font-normal text-muted-foreground">✨ Generated by AI</span>}
+          </CardTitle>
+          {aiConfig && <p className="text-sm text-muted-foreground">{aiConfig.description}</p>}
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div>
               <label className="text-sm font-medium block mb-2">Chart Type</label>
               <Tabs value={chartType} onValueChange={setChartType} className="w-full">
@@ -182,6 +211,22 @@ export function BasicCharts({ data }: BasicChartsProps) {
                 </SelectContent>
               </Select>
             </div>
+
+            <div>
+              <label className="text-sm font-medium block mb-2">Aggregation</label>
+              <Select value={aggregation} onValueChange={(value: any) => setAggregation(value)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="sum">Sum</SelectItem>
+                  <SelectItem value="average">Average</SelectItem>
+                  <SelectItem value="count">Count</SelectItem>
+                  <SelectItem value="max">Maximum</SelectItem>
+                  <SelectItem value="min">Minimum</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="h-96 w-full">
@@ -200,7 +245,7 @@ export function BasicCharts({ data }: BasicChartsProps) {
                     />
                     <YAxis tick={{ fontSize: 12 }} tickFormatter={formatTooltipValue} />
                     <Tooltip
-                      formatter={(value: number) => [formatTooltipValue(value), yAxisColumn]}
+                      formatter={(value: number) => [formatTooltipValue(value), `${yAxisColumn} (${aggregation})`]}
                       labelStyle={{ color: '#000' }}
                       contentStyle={{
                         backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -224,7 +269,7 @@ export function BasicCharts({ data }: BasicChartsProps) {
                     />
                     <YAxis tick={{ fontSize: 12 }} tickFormatter={formatTooltipValue} />
                     <Tooltip
-                      formatter={(value: number) => [formatTooltipValue(value), yAxisColumn]}
+                      formatter={(value: number) => [formatTooltipValue(value), `${yAxisColumn} (${aggregation})`]}
                       labelStyle={{ color: '#000' }}
                       contentStyle={{
                         backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -259,7 +304,7 @@ export function BasicCharts({ data }: BasicChartsProps) {
                       ))}
                     </Pie>
                     <Tooltip
-                      formatter={(value: number) => [formatTooltipValue(value), yAxisColumn]}
+                      formatter={(value: number) => [formatTooltipValue(value), `${yAxisColumn} (${aggregation})`]}
                       contentStyle={{
                         backgroundColor: 'rgba(255, 255, 255, 0.9)',
                         border: '1px solid #ccc',
@@ -288,7 +333,8 @@ export function BasicCharts({ data }: BasicChartsProps) {
             <div className="mt-4 text-sm text-muted-foreground">
               <p>
                 Showing {chartData.length} data points
-                {data.length > 20 && ` (limited from ${data.length} total rows)`}
+                {data.length > 50 && ` (limited from ${data.length} total rows)`}
+                {aggregation !== 'sum' && ` using ${aggregation} aggregation`}
               </p>
             </div>
           )}
