@@ -49,7 +49,7 @@ export default function Header({ user }: Props) {
       <div className="mx-auto max-w-7xl relative px-4 sm:px-6 lg:px-8 py-3 md:py-4 flex items-center justify-between">
         <div className="flex flex-1 items-center justify-start">
           <Link className="flex items-center" href="/">
-            <Image src="/logo.svg" width={180} height={28} alt="InsightHub" className="md:w-[220px] md:h-[34px]" />
+            <Image src="/logo.svg" width={220} height={34} alt="InsightHub" />
           </Link>
 
           <div className="hidden lg:flex ml-8 xl:ml-10 space-x-6 xl:space-x-8">

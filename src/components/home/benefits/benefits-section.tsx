@@ -1,4 +1,5 @@
 import { CheckCircle } from 'lucide-react';
+import Image from 'next/image';
 
 const benefits = [
   'Save hours of manual data analysis time',
@@ -35,9 +36,13 @@ export function BenefitsSection() {
 
           <div className="relative order-1 lg:order-2">
             <div className="aspect-square w-full max-w-lg mx-auto rounded-lg overflow-hidden border border-border shadow-lg">
-              <div className="h-full w-full bg-background flex items-center justify-center">
-                <span className="text-lg md:text-xl text-muted-foreground">Dashboard Visualization</span>
-              </div>
+              <Image
+                src="/assets/benefits-post.png"
+                alt="InsightHub Dashboard Visualization"
+                width={512}
+                height={512}
+                className="h-full w-full object-cover"
+              />
             </div>
 
             <div className="absolute -top-3 -right-3 md:-top-6 md:-right-6 h-12 w-12 md:h-20 md:w-20 bg-border/20 rounded-full blur-xl"></div>
