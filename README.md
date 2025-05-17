@@ -1,7 +1,9 @@
 # 🔮 InsightHub - AI-Powered Business Intelligence Platform
 
 <div align="center">
-  ![Logo](https://i.postimg.cc/rsk12HJW/logo.png)
+  <p align="center">
+    <img src="https://i.postimg.cc/rsk12HJW/logo.png" alt="InsightHub Logo" width="250" />
+  </p>
   
   [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
   [![Next.js](https://img.shields.io/badge/Next.js-15.3.2-black)](https://nextjs.org/)
@@ -52,39 +54,39 @@ Experience the power of AI-driven business intelligence firsthand!
 
 ### Landing Page
 
-<img src="https://link-to-landing-page-screenshot.png" alt="InsightHub Landing Page" width="800"/>
-
-_Modern landing page showcasing AI-powered features_
+<a href="https://postimg.cc/tZRGxHKw">
+    <img src="https://i.postimg.cc/TwgdBdCd/Screenshot-2025-05-18-022106.png" alt="InsightHub Screenshot" width="600"/>
+</a>
 
 ### Dashboard Overview
 
-<img src="https://link-to-dashboard-screenshot.png" alt="Dashboard Overview" width="800"/>
+<a href="https://postimg.cc/68GMY1V3">
+    <img src="https://i.postimg.cc/P5S0fgPm/Screenshot-2025-05-18-022906.png" alt="InsightHub Screenshot" width="800" />
+</a>
 
-_Comprehensive dashboard with file management and AI features_
+### AI Chart Generating Interface
 
-### AI Chat Interface
-
-<img src="https://link-to-ai-chat-screenshot.png" alt="AI Chat Interface" width="800"/>
-
-_Conversational AI that understands your business data_
+<a href="https://postimg.cc/m13KmLvT">
+  <img src="https://i.postimg.cc/SRHqNjVY/Screenshot-2025-05-18-022715.png" alt="InsightHub Screenshot 2" width="800" />
+</a>
 
 ### Data Visualization
 
-<img src="https://link-to-visualization-screenshot.png" alt="Data Visualization" width="800"/>
-
-_AI-generated charts and interactive visualizations_
+<a href="https://postimg.cc/rKLZFRbm">
+  <img src="https://i.postimg.cc/rFDBjSNS/Screenshot-2025-04-21-210935.png" alt="InsightHub Screenshot 3" width="800" />
+</a>
 
 ### File Upload & Management
 
-<img src="https://link-to-file-upload-screenshot.png" alt="File Upload" width="800"/>
+<a href="https://postimg.cc/t720f57b">
+  <img src="https://i.postimg.cc/zX1Jy2ry/Screenshot-2025-05-18-023131.png" alt="InsightHub Screenshot 4" width="800" />
+</a>
 
-_Seamless data upload with drag-and-drop functionality_
+### AI Natural Language Query Interface ( AI Chatting )
 
-### Data Analysis Page
-
-<img src="https://link-to-analysis-page-screenshot.png" alt="Data Analysis" width="800"/>
-
-_Comprehensive data analysis with multiple view modes_
+<a href="https://postimg.cc/Lqn7cKYF">
+  <img src="https://i.postimg.cc/mrwsFTTk/Screenshot-2025-05-18-023416.png" alt="InsightHub Screenshot 5" width="800" />
+</a>
 
 ## 🛠️ Tech Stack
 
@@ -102,7 +104,7 @@ _Comprehensive data analysis with multiple view modes_
 - **Authentication**: Firebase Auth
 - **Database**: Firestore
 - **File Storage**: Firebase Storage
-- **AI**: Google Gemini API
+- **AI**: Google Gemini Flash 1.5
 - **Data Processing**: Papa Parse, SheetJS
 
 ### Development Tools
@@ -293,7 +295,7 @@ insighthub-hq/
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+Contributions Welcome!
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
