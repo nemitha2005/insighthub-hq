@@ -6,7 +6,7 @@ import { Home, Database, BarChart, FileText, Menu, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { DashboardGradient } from '@/components/gradients/dashboard-gradient';
-import { Footer } from '@/components/home/footer/footer';
+import { Footer } from '@/components/home/dashboard-footer/footer';
 import Image from 'next/image';
 import { ProfileDropdown } from '@/components/dashboard/profile-dropdown';
 import { useState } from 'react';
