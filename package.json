@@ -2,6 +2,22 @@
   "name": "insighthub-business-intelligence",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
+  "author": "Nemitha Wijerathna",
+  "description": "AI-powered business intelligence platform for data analysis and insights",
+  "keywords": [
+    "business intelligence",
+    "ai",
+    "data analysis",
+    "next.js",
+    "react",
+    "firebase"
+  ],
+  "homepage": "https://insighthub-hq.vercel.app/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nemitha2005/insighthub-hq.git"
+  },
   "engines": {
     "node": ">=20"
   },
