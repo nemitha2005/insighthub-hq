@@ -1,12 +1,13 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { FileData } from '@/services/storageService';
+import { DataSummary } from '@/services/analysisService';
 
 interface AnalysisData {
   columns: string[];
   records: Record<string, any>[];
-  summary: Record<string, any>;
+  summary: DataSummary;
   isLoading: boolean;
   error: string | null;
 }
@@ -19,10 +20,17 @@ interface AnalysisContextType {
   resetAnalysis: () => void;
 }
 
+// Create a default summary that matches the DataSummary type
+const defaultSummary: DataSummary = {
+  rowCount: 0,
+  columnCount: 0,
+  columnSummaries: {},
+};
+
 const initialAnalysisData: AnalysisData = {
   columns: [],
   records: [],
-  summary: {},
+  summary: defaultSummary,
   isLoading: false,
   error: null,
 };
@@ -33,14 +41,16 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
   const [currentFile, setCurrentFile] = useState<FileData | null>(null);
   const [analysisData, setAnalysisDataState] = useState<AnalysisData>(initialAnalysisData);
 
-  const setAnalysisData = (data: Partial<AnalysisData>) => {
+  // Use useCallback to prevent recreation on every render
+  const setAnalysisData = useCallback((data: Partial<AnalysisData>) => {
     setAnalysisDataState((prev) => ({ ...prev, ...data }));
-  };
+  }, []);
 
-  const resetAnalysis = () => {
+  // Use useCallback for resetAnalysis too
+  const resetAnalysis = useCallback(() => {
     setCurrentFile(null);
     setAnalysisDataState(initialAnalysisData);
-  };
+  }, []);
 
   return (
     <AnalysisContext.Provider

@@ -29,30 +29,51 @@ export async function parseCSV(csvContent: string): Promise<{ columns: string[];
       header: true,
       dynamicTyping: true,
       skipEmptyLines: true,
+      transform: (value, column) => {
+        if (typeof value === 'string') {
+          return value.trim();
+        }
+        return value;
+      },
       complete: (results) => {
         try {
-          const cleanedData = results.data.map((row: any) => {
-            const cleanedRow: Record<string, any> = {};
-            Object.keys(row).forEach((key) => {
-              const cleanKey = key.trim();
-              if (cleanKey) {
-                cleanedRow[cleanKey] = row[key];
-              }
-            });
-            return cleanedRow;
-          });
+          console.log('Papa parse results:', results);
 
-          const columns = results.meta.fields?.map((field) => field.trim()) || [];
+          if (results.errors && results.errors.length > 0) {
+            console.warn('CSV parsing warnings:', results.errors);
+          }
+
+          const cleanedData = results.data
+            .filter((row: any) => {
+              return Object.values(row).some((value) => value !== null && value !== undefined && value !== '');
+            })
+            .map((row: any) => {
+              const cleanedRow: Record<string, any> = {};
+              Object.keys(row).forEach((key) => {
+                const cleanKey = key.trim();
+                if (cleanKey) {
+                  cleanedRow[cleanKey] = row[key];
+                }
+              });
+              return cleanedRow;
+            });
+
+          const columns = cleanedData.length > 0 ? Object.keys(cleanedData[0]) : [];
+
+          console.log('Parsed columns:', columns);
+          console.log('Parsed data count:', cleanedData.length);
 
           resolve({
             columns: columns.filter(Boolean),
             data: cleanedData,
           });
         } catch (err) {
-          reject(err);
+          console.error('Error processing CSV data:', err);
+          reject(new Error('Failed to process CSV data'));
         }
       },
       error: (err: any) => {
+        console.error('Papa parse error:', err);
         reject(new Error(err.message || 'CSV parsing error'));
       },
     });
@@ -71,6 +92,7 @@ export async function parseExcel(fileBuffer: ArrayBuffer): Promise<{ columns: st
 
     return { columns, data };
   } catch (err) {
+    console.error('Excel parsing error:', err);
     throw new Error(`Excel parsing error: ${err instanceof Error ? err.message : String(err)}`);
   }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { getUserFiles, FileData } from '@/services/storageService';
 
@@ -22,16 +22,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
 
-  useEffect(() => {
-    if (user) {
-      refreshFiles();
-    } else {
-      setFiles([]);
-      setLoading(false);
-    }
-  }, [user]);
-
-  const refreshFiles = async () => {
+  const refreshFiles = useCallback(async () => {
     if (!user) {
       setFiles([]);
       setLoading(false);
@@ -56,7 +47,11 @@ export function DataProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    refreshFiles();
+  }, [refreshFiles]);
 
   return (
     <DataContext.Provider

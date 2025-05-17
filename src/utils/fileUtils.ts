@@ -1,17 +1,18 @@
-import { getDownloadURL, ref } from 'firebase/storage';
+import { ref, getBytes } from 'firebase/storage';
 import { storage } from '@/lib/firebase';
 import { FileData } from '@/services/storageService';
 import { parseCSV, parseExcel } from '@/services/analysisService';
 
 export async function fetchAndParseFile(file: FileData): Promise<{ columns: string[]; data: Record<string, any>[] }> {
   try {
-    const fileRef = ref(storage, file.path);
-    const url = await getDownloadURL(fileRef);
+    console.log('Fetching file:', file.name, 'from path:', file.path);
 
-    const response = await fetch(url);
+    const fileRef = ref(storage, file.path);
+
+    const fileBytes = await getBytes(fileRef);
 
     if (file.type.includes('csv') || file.name.toLowerCase().endsWith('.csv')) {
-      const text = await response.text();
+      const text = new TextDecoder('utf-8').decode(fileBytes);
       return parseCSV(text);
     } else if (
       file.type.includes('excel') ||
@@ -19,8 +20,7 @@ export async function fetchAndParseFile(file: FileData): Promise<{ columns: stri
       file.name.toLowerCase().endsWith('.xlsx') ||
       file.name.toLowerCase().endsWith('.xls')
     ) {
-      const arrayBuffer = await response.arrayBuffer();
-      return parseExcel(arrayBuffer);
+      return parseExcel(fileBytes);
     } else {
       throw new Error(`Unsupported file type: ${file.type}`);
     }

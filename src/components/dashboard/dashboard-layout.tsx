@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Home, Database, BarChart, FileText, Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { usePathname } from 'next/navigation'; // Add this import
+import { usePathname } from 'next/navigation';
 import { DashboardGradient } from '@/components/gradients/dashboard-gradient';
 import { Footer } from '@/components/home/footer/footer';
 import Image from 'next/image';
@@ -24,11 +24,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: <Home size={18} /> },
     { name: 'Data', href: '/dashboard/data', icon: <Database size={18} /> },
-    { name: 'Analytics', href: '/dashboard/analytics', icon: <BarChart size={18} />, disabled: true },
+    { name: 'Analyze', href: '/dashboard/analyze', icon: <BarChart size={18} /> },
     { name: 'Reports', href: '/dashboard/reports', icon: <FileText size={18} />, disabled: true },
     { name: 'Settings', href: '/dashboard/settings', icon: <Settings size={18} />, disabled: true },
   ];
-
   return (
     <div className="min-h-screen bg-[#0B131380] flex flex-col">
       <DashboardGradient />
