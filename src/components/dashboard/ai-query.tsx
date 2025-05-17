@@ -96,7 +96,7 @@ export function AIQueryComponent({ data, columns, onChartGenerated }: AIQueryCom
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="bg-background/50 backdrop-blur-sm border-border">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-yellow-500" />
@@ -110,15 +110,21 @@ export function AIQueryComponent({ data, columns, onChartGenerated }: AIQueryCom
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Ask about your data: 'Show sales trends by month'"
-                className="flex-1"
+                className="flex-1 bg-background border-border"
                 disabled={isLoading}
               />
-              <Button type="submit" disabled={isLoading || !query.trim()}>
+              <Button type="submit" disabled={isLoading || !query.trim()} variant="secondary">
                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                 {isLoading ? 'Processing...' : 'Ask AI'}
               </Button>
               {query && (
-                <Button type="button" variant="outline" onClick={resetQuery} disabled={isLoading}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={resetQuery}
+                  disabled={isLoading}
+                  className="border-border"
+                >
                   <RotateCcw className="h-4 w-4" />
                 </Button>
               )}
@@ -136,7 +142,7 @@ export function AIQueryComponent({ data, columns, onChartGenerated }: AIQueryCom
                     size="sm"
                     onClick={() => handleExampleClick(example)}
                     disabled={isLoading}
-                    className="text-xs"
+                    className="text-xs h-8 border-border hover:bg-background/80"
                   >
                     {example}
                   </Button>
@@ -147,10 +153,10 @@ export function AIQueryComponent({ data, columns, onChartGenerated }: AIQueryCom
 
           {lastResult && (
             <div
-              className={`p-4 rounded-lg border ${
+              className={`p-4 rounded-lg border backdrop-blur-sm ${
                 lastResult.success
-                  ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950'
-                  : 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950'
+                  ? 'border-green-200 bg-green-50/80 dark:border-green-800 dark:bg-green-950/50'
+                  : 'border-red-200 bg-red-50/80 dark:border-red-800 dark:bg-red-950/50'
               }`}
             >
               <div className="flex items-start gap-3">
@@ -187,7 +193,7 @@ export function AIQueryComponent({ data, columns, onChartGenerated }: AIQueryCom
             </div>
           )}
 
-          <div className="text-xs text-muted-foreground space-y-1">
+          <div className="text-xs text-muted-foreground space-y-1 p-3 bg-background/30 rounded-lg border border-border">
             <p className="font-medium">💡 Tips for better results:</p>
             <ul className="list-disc list-inside space-y-0.5 pl-2">
               <li>Be specific: "Show sales by month" is better than "show sales"</li>

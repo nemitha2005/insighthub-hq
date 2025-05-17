@@ -21,7 +21,7 @@ export function DataSummaryPanel({ summary }: DataSummaryPanelProps) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
+        <Card className="bg-background/50 backdrop-blur-sm border-border">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Rows</CardTitle>
           </CardHeader>
@@ -30,7 +30,7 @@ export function DataSummaryPanel({ summary }: DataSummaryPanelProps) {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-background/50 backdrop-blur-sm border-border">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Columns</CardTitle>
           </CardHeader>
@@ -39,7 +39,7 @@ export function DataSummaryPanel({ summary }: DataSummaryPanelProps) {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-background/50 backdrop-blur-sm border-border">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Total Cells</CardTitle>
           </CardHeader>
@@ -51,9 +51,9 @@ export function DataSummaryPanel({ summary }: DataSummaryPanelProps) {
 
       <div>
         <h3 className="text-lg font-semibold mb-4">Column Summaries</h3>
-        <div className="border rounded-lg divide-y">
+        <div className="border rounded-lg divide-y bg-background/50 backdrop-blur-sm border-border">
           {Object.entries(summary.columnSummaries).map(([columnName, columnSummary]) => (
-            <div key={columnName} className="p-4">
+            <div key={columnName} className="p-4 hover:bg-background/80 transition-colors">
               <h4 className="font-medium mb-2">{columnName}</h4>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {columnSummary.min !== undefined && (

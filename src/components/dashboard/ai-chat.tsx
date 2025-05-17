@@ -127,8 +127,8 @@ export function AIChat({ data, columns }: AIChatProps) {
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <Card className="flex flex-col h-[550px]">
-        <CardHeader className="border-b pb-4 flex-shrink-0">
+      <Card className="flex flex-col h-[550px] bg-background/50 backdrop-blur-sm border-border">
+        <CardHeader className="border-b border-border pb-4 flex-shrink-0">
           <CardTitle className="flex items-center gap-2">
             <MessageCircle className="h-5 w-5 text-blue-500" />
             Chat with Your Data
@@ -156,7 +156,9 @@ export function AIChat({ data, columns }: AIChatProps) {
                   {/* Message Content */}
                   <div
                     className={`rounded-lg px-4 py-2 ${
-                      message.type === 'user' ? 'bg-blue-500 text-white' : 'bg-muted border'
+                      message.type === 'user'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-background/80 backdrop-blur-sm border border-border text-foreground'
                     }`}
                   >
                     <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
@@ -165,7 +167,7 @@ export function AIChat({ data, columns }: AIChatProps) {
                     {message.statistics && message.statistics.length > 0 && (
                       <div className="mt-3 flex flex-wrap gap-2">
                         {message.statistics.map((stat, index) => (
-                          <Badge key={index} variant="outline" className="text-xs">
+                          <Badge key={index} variant="outline" className="text-xs border-border">
                             <BarChart3 className="h-3 w-3 mr-1" />
                             {stat.label}: {stat.value}
                           </Badge>
@@ -181,7 +183,10 @@ export function AIChat({ data, columns }: AIChatProps) {
                           Insights
                         </div>
                         {message.insights.map((insight, index) => (
-                          <div key={index} className="text-xs p-2 bg-blue-50 dark:bg-blue-950/20 rounded border">
+                          <div
+                            key={index}
+                            className="text-xs p-2 bg-blue-50 dark:bg-blue-950/20 rounded border border-border"
+                          >
                             {insight}
                           </div>
                         ))}
@@ -201,7 +206,7 @@ export function AIChat({ data, columns }: AIChatProps) {
                   <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center">
                     <Bot className="h-4 w-4" />
                   </div>
-                  <div className="bg-muted border rounded-lg px-4 py-2">
+                  <div className="bg-background/80 backdrop-blur-sm border border-border rounded-lg px-4 py-2">
                     <div className="flex items-center gap-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
                       <span className="text-sm text-muted-foreground">Analyzing your data...</span>
@@ -217,7 +222,7 @@ export function AIChat({ data, columns }: AIChatProps) {
 
           {/* Conversation Starters */}
           {showStarters && conversationStarters.length > 0 && (
-            <div className="border-t border-b p-4 bg-muted/20 flex-shrink-0">
+            <div className="border-t border-b border-border p-4 bg-background/30 backdrop-blur-sm flex-shrink-0">
               <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
                 <TrendingUp className="h-4 w-4" />
                 Try asking:
@@ -230,7 +235,7 @@ export function AIChat({ data, columns }: AIChatProps) {
                     size="sm"
                     onClick={() => handleStarterClick(starter)}
                     disabled={isLoading}
-                    className="text-xs h-8"
+                    className="text-xs h-8 border-border hover:bg-background/80"
                   >
                     {starter}
                   </Button>
@@ -240,16 +245,16 @@ export function AIChat({ data, columns }: AIChatProps) {
           )}
 
           {/* Input Form */}
-          <div className="border-t p-4 flex-shrink-0">
+          <div className="border-t border-border p-4 flex-shrink-0 bg-background/50 backdrop-blur-sm">
             <form onSubmit={handleFormSubmit} className="flex gap-2">
               <Input
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Ask about your data: 'What's the average salary?' or 'Show me patterns'"
                 disabled={isLoading}
-                className="flex-1"
+                className="flex-1 bg-background border-border"
               />
-              <Button type="submit" disabled={isLoading || !inputValue.trim()} size="icon">
+              <Button type="submit" disabled={isLoading || !inputValue.trim()} size="icon" variant="secondary">
                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               </Button>
             </form>

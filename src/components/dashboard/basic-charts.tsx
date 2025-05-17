@@ -150,7 +150,7 @@ export function BasicCharts({ data, aiConfig }: BasicChartsProps) {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="bg-background/50 backdrop-blur-sm border-border">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <span>{chartTitle}</span>
@@ -163,7 +163,7 @@ export function BasicCharts({ data, aiConfig }: BasicChartsProps) {
             <div>
               <label className="text-sm font-medium block mb-2">Chart Type</label>
               <Tabs value={chartType} onValueChange={setChartType} className="w-full">
-                <TabsList className="w-full">
+                <TabsList className="w-full bg-background border border-border">
                   <TabsTrigger value="bar" className="flex-1">
                     <BarChartIcon className="h-4 w-4 mr-2" />
                     Bar
@@ -183,10 +183,10 @@ export function BasicCharts({ data, aiConfig }: BasicChartsProps) {
             <div>
               <label className="text-sm font-medium block mb-2">X-Axis (Category)</label>
               <Select value={xAxisColumn || undefined} onValueChange={setXAxisColumn}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-background border-border">
                   <SelectValue placeholder="Select column" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-background border-border">
                   {columns.map((column) => (
                     <SelectItem key={column} value={column}>
                       {column}
@@ -199,10 +199,10 @@ export function BasicCharts({ data, aiConfig }: BasicChartsProps) {
             <div>
               <label className="text-sm font-medium block mb-2">Y-Axis (Value)</label>
               <Select value={yAxisColumn || undefined} onValueChange={setYAxisColumn}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-background border-border">
                   <SelectValue placeholder="Select column" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-background border-border">
                   {columns.map((column) => (
                     <SelectItem key={column} value={column}>
                       {column}
@@ -215,10 +215,10 @@ export function BasicCharts({ data, aiConfig }: BasicChartsProps) {
             <div>
               <label className="text-sm font-medium block mb-2">Aggregation</label>
               <Select value={aggregation} onValueChange={(value: any) => setAggregation(value)}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-background border-border">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-background border-border">
                   <SelectItem value="sum">Sum</SelectItem>
                   <SelectItem value="average">Average</SelectItem>
                   <SelectItem value="count">Count</SelectItem>
@@ -234,50 +234,62 @@ export function BasicCharts({ data, aiConfig }: BasicChartsProps) {
               <ResponsiveContainer width="100%" height="100%">
                 {chartType === 'bar' ? (
                   <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
-                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" stroke="hsl(var(--border))" />
                     <XAxis
                       dataKey={xAxisColumn}
-                      tick={{ fontSize: 12 }}
+                      tick={{ fontSize: 12, fill: '#ffffff' }}
                       tickFormatter={formatAxisValue}
                       angle={-45}
                       textAnchor="end"
                       height={80}
+                      stroke="#ffffff"
                     />
-                    <YAxis tick={{ fontSize: 12 }} tickFormatter={formatTooltipValue} />
+                    <YAxis
+                      tick={{ fontSize: 12, fill: '#ffffff' }}
+                      tickFormatter={formatTooltipValue}
+                      stroke="#ffffff"
+                    />
                     <Tooltip
                       formatter={(value: number) => [formatTooltipValue(value), `${yAxisColumn} (${aggregation})`]}
-                      labelStyle={{ color: '#000' }}
+                      labelStyle={{ color: '#ffffff' }}
                       contentStyle={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                        border: '1px solid #ccc',
-                        borderRadius: '4px',
+                        backgroundColor: 'hsl(var(--background))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px',
+                        color: '#ffffff',
                       }}
                     />
-                    <Legend />
+                    <Legend wrapperStyle={{ color: '#ffffff' }} />
                     <Bar dataKey={yAxisColumn} fill="#8884d8" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 ) : chartType === 'line' ? (
                   <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
-                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" stroke="hsl(var(--border))" />
                     <XAxis
                       dataKey={xAxisColumn}
-                      tick={{ fontSize: 12 }}
+                      tick={{ fontSize: 12, fill: '#ffffff' }}
                       tickFormatter={formatAxisValue}
                       angle={-45}
                       textAnchor="end"
                       height={80}
+                      stroke="#ffffff"
                     />
-                    <YAxis tick={{ fontSize: 12 }} tickFormatter={formatTooltipValue} />
+                    <YAxis
+                      tick={{ fontSize: 12, fill: '#ffffff' }}
+                      tickFormatter={formatTooltipValue}
+                      stroke="#ffffff"
+                    />
                     <Tooltip
                       formatter={(value: number) => [formatTooltipValue(value), `${yAxisColumn} (${aggregation})`]}
-                      labelStyle={{ color: '#000' }}
+                      labelStyle={{ color: '#ffffff' }}
                       contentStyle={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                        border: '1px solid #ccc',
-                        borderRadius: '4px',
+                        backgroundColor: 'hsl(var(--background))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px',
+                        color: '#ffffff',
                       }}
                     />
-                    <Legend />
+                    <Legend wrapperStyle={{ color: '#ffffff' }} />
                     <Line
                       type="monotone"
                       dataKey={yAxisColumn}
@@ -306,17 +318,18 @@ export function BasicCharts({ data, aiConfig }: BasicChartsProps) {
                     <Tooltip
                       formatter={(value: number) => [formatTooltipValue(value), `${yAxisColumn} (${aggregation})`]}
                       contentStyle={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                        border: '1px solid #ccc',
-                        borderRadius: '4px',
+                        backgroundColor: 'hsl(var(--background))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px',
+                        color: 'hsl(var(--foreground))',
                       }}
                     />
-                    <Legend />
+                    <Legend wrapperStyle={{ color: 'hsl(var(--foreground))' }} />
                   </PieChart>
                 )}
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-full border-2 border-dashed border-border rounded-lg">
+              <div className="flex items-center justify-center h-full border-2 border-dashed border-border rounded-lg bg-background/30">
                 <div className="text-center text-muted-foreground">
                   <p className="mb-2">Unable to generate chart</p>
                   <p className="text-sm">
