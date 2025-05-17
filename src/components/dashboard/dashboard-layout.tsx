@@ -26,7 +26,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: 'Data', href: '/dashboard/data', icon: <Database size={18} /> },
     { name: 'Analyze', href: '/dashboard/analyze', icon: <BarChart size={18} /> },
     { name: 'Reports', href: '/dashboard/reports', icon: <FileText size={18} />, disabled: true },
-    { name: 'Settings', href: '/dashboard/settings', icon: <Settings size={18} />, disabled: true },
   ];
   return (
     <div className="min-h-screen bg-[#0B131380] flex flex-col">
@@ -49,7 +48,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-4 relative z-10">
-        <div className="flex flex-wrap space-x-1 md:space-x-2 mb-8 overflow-x-auto pb-2">
+        <div className="flex flex-wrap space-x-1 md:space-x-2 mb-8 overflow-x-auto p-2">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (

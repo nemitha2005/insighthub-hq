@@ -6,12 +6,13 @@ import { useAnalysis } from '@/contexts/AnalysisContext';
 import { fetchAndParseFile } from '@/utils/fileUtils';
 import { detectColumnTypes, generateSummary } from '@/services/analysisService';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, Table, BarChart, Info, Sparkles } from 'lucide-react';
+import { Loader2, Table, BarChart, Info, Sparkles, MessageCircle } from 'lucide-react';
 import { FileData } from '@/services/storageService';
 import { DashboardDataTable } from '@/components/dashboard/data-table';
 import { DataSummaryPanel } from '@/components/dashboard/data-summary-panel';
 import { BasicCharts } from '@/components/dashboard/basic-charts';
 import { AIQueryComponent } from '@/components/dashboard/ai-query';
+import { AIChat } from '@/components/dashboard/ai-chat';
 import { ChartConfig } from '@/lib/gemini';
 
 interface FileAnalysisPageProps {
@@ -22,7 +23,7 @@ interface FileAnalysisPageProps {
 export function FileAnalysisPage({ file, onBack }: FileAnalysisPageProps) {
   const { toast } = useToast();
   const { setCurrentFile, setAnalysisData, analysisData } = useAnalysis();
-  const [activeTab, setActiveTab] = useState('data');
+  const [activeTab, setActiveTab] = useState('chat');
   const [isLoading, setIsLoading] = useState(true);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [aiChartConfig, setAiChartConfig] = useState<ChartConfig | undefined>(undefined);
@@ -134,6 +135,7 @@ export function FileAnalysisPage({ file, onBack }: FileAnalysisPageProps) {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
@@ -153,11 +155,16 @@ export function FileAnalysisPage({ file, onBack }: FileAnalysisPageProps) {
         </button>
       </div>
 
+      {/* Enhanced Tabs with AI Chat */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="ai" className="flex items-center gap-2">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="chat" className="flex items-center gap-2">
+            <MessageCircle className="h-4 w-4" />
+            AI Chat
+          </TabsTrigger>
+          <TabsTrigger value="generate" className="flex items-center gap-2">
             <Sparkles className="h-4 w-4" />
-            Ask AI
+            Generate Chart
           </TabsTrigger>
           <TabsTrigger value="data" className="flex items-center gap-2">
             <Table className="h-4 w-4" />
@@ -174,7 +181,33 @@ export function FileAnalysisPage({ file, onBack }: FileAnalysisPageProps) {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="ai" className="space-y-4">
+        {/* AI Chat Tab */}
+        <TabsContent value="chat" className="space-y-4">
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800 mb-4">
+            <div className="flex items-center gap-2 mb-2">
+              <MessageCircle className="h-5 w-5 text-blue-600" />
+              <h3 className="font-semibold text-blue-900 dark:text-blue-100">Conversational Data Analysis</h3>
+            </div>
+            <p className="text-blue-800 dark:text-blue-200 text-sm">
+              Chat with AI to get insights, ask questions, and understand your data better. Try asking: "What patterns
+              do you see?" or "Give me an overview of this data."
+            </p>
+          </div>
+          <AIChat data={analysisData.records} columns={analysisData.columns} />
+        </TabsContent>
+
+        {/* Chart Generation Tab */}
+        <TabsContent value="generate" className="space-y-4">
+          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 rounded-lg p-4 border border-yellow-200 dark:border-yellow-800 mb-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="h-5 w-5 text-yellow-600" />
+              <h3 className="font-semibold text-yellow-900 dark:text-yellow-100">AI Chart Generator</h3>
+            </div>
+            <p className="text-yellow-800 dark:text-yellow-200 text-sm">
+              Describe the chart you want in plain English and AI will create it automatically. Try: "Show sales by
+              month" or "Create a pie chart of departments."
+            </p>
+          </div>
           <AIQueryComponent
             data={analysisData.records}
             columns={analysisData.columns}
@@ -182,17 +215,21 @@ export function FileAnalysisPage({ file, onBack }: FileAnalysisPageProps) {
           />
         </TabsContent>
 
+        {/* Data Table Tab */}
         <TabsContent value="data">
           <DashboardDataTable data={analysisData.records} />
         </TabsContent>
 
+        {/* Summary Tab */}
         <TabsContent value="summary">
           <DataSummaryPanel summary={analysisData.summary} />
         </TabsContent>
 
+        {/* Visualize Tab (Enhanced with AI) */}
         <TabsContent value="visualize">
           <BasicCharts data={analysisData.records} aiConfig={aiChartConfig} />
 
+          {/* Clear AI Configuration */}
           {aiChartConfig && (
             <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
               <div className="flex items-center justify-between">
@@ -216,6 +253,7 @@ export function FileAnalysisPage({ file, onBack }: FileAnalysisPageProps) {
         </TabsContent>
       </Tabs>
 
+      {/* Quick Stats Footer */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pt-6 border-t border-border">
         <div className="text-center p-4 bg-background/50 rounded-lg border">
           <p className="text-2xl font-bold">{analysisData.records.length.toLocaleString()}</p>
@@ -234,6 +272,25 @@ export function FileAnalysisPage({ file, onBack }: FileAnalysisPageProps) {
         <div className="text-center p-4 bg-background/50 rounded-lg border">
           <p className="text-2xl font-bold">{(file.size / 1024 / 1024).toFixed(1)}MB</p>
           <p className="text-sm text-muted-foreground">File Size</p>
+        </div>
+      </div>
+
+      {/* AI Features Summary */}
+      <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/20 dark:to-blue-950/20 rounded-lg border border-purple-200 dark:border-purple-800">
+        <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-2">🚀 AI-Powered Features Available</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div className="flex items-center gap-2">
+            <MessageCircle className="h-4 w-4 text-purple-600" />
+            <span className="text-purple-800 dark:text-purple-200">
+              <strong>Conversational Analysis:</strong> Ask questions about your data in plain English
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-purple-600" />
+            <span className="text-purple-800 dark:text-purple-200">
+              <strong>Auto-Chart Generation:</strong> Describe charts and AI creates them instantly
+            </span>
+          </div>
         </div>
       </div>
     </div>
