@@ -54,7 +54,9 @@ Experience the power of AI-driven business intelligence firsthand!
 
 ### Landing Page
 
-<img src="https://link-to-landing-page-screenshot.png" alt="InsightHub Landing Page" width="800"/>
+<a href="https://postimg.cc/tZRGxHKw">
+    <img src="https://i.postimg.cc/TwgdBdCd/Screenshot-2025-05-18-022106.png" alt="InsightHub Screenshot" width="600"/>
+</a>
 
 _Modern landing page showcasing AI-powered features_
 
