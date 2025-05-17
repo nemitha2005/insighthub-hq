@@ -54,7 +54,19 @@ export function BasicCharts({ data }: BasicChartsProps) {
   }, [columns, columnTypes, xAxisColumn, yAxisColumn]);
 
   const chartData: ChartDataPoint[] = useMemo(() => {
-    if (!xAxisColumn || !yAxisColumn || data.length === 0) return [];
+    console.log('=== CHART DEBUG ===');
+    console.log('Raw data:', data);
+    console.log('Raw data length:', data.length);
+    console.log('Sample raw data:', data.slice(0, 2));
+    console.log('xAxisColumn:', xAxisColumn);
+    console.log('yAxisColumn:', yAxisColumn);
+    console.log('columns:', columns);
+    console.log('columnTypes:', columnTypes);
+
+    if (!xAxisColumn || !yAxisColumn || data.length === 0) {
+      console.log('Early return - missing required data');
+      return [];
+    }
 
     const groupedData = new Map<string, number>();
     const limitedData = data.slice(0, 20);
@@ -62,6 +74,8 @@ export function BasicCharts({ data }: BasicChartsProps) {
     limitedData.forEach((row) => {
       const xValue = String(row[xAxisColumn] || 'Undefined').slice(0, 20);
       const yValue = parseFloat(row[yAxisColumn]);
+
+      console.log('Processing row:', { xValue, yValue, row });
 
       if (!isNaN(yValue)) {
         if (groupedData.has(xValue)) {
@@ -72,7 +86,7 @@ export function BasicCharts({ data }: BasicChartsProps) {
       }
     });
 
-    return Array.from(groupedData.entries())
+    const result = Array.from(groupedData.entries())
       .map(([key, value]) => {
         const dataPoint: ChartDataPoint = {
           name: key,
@@ -83,6 +97,12 @@ export function BasicCharts({ data }: BasicChartsProps) {
         return dataPoint;
       })
       .sort((a, b) => Number(b[yAxisColumn]) - Number(a[yAxisColumn]));
+
+    console.log('Final chartData:', result);
+    console.log('Chart data length:', result.length);
+    console.log('=== END CHART DEBUG ===');
+
+    return result;
   }, [data, xAxisColumn, yAxisColumn]);
 
   if (data.length === 0) {
@@ -167,94 +187,88 @@ export function BasicCharts({ data }: BasicChartsProps) {
           <div className="h-96 w-full">
             {hasValidData ? (
               <ResponsiveContainer width="100%" height="100%">
-                <>
-                  {chartType === 'bar' && (
-                    <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
-                      <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                      <XAxis
-                        dataKey={xAxisColumn}
-                        tick={{ fontSize: 12 }}
-                        tickFormatter={formatAxisValue}
-                        angle={-45}
-                        textAnchor="end"
-                        height={80}
-                      />
-                      <YAxis tick={{ fontSize: 12 }} tickFormatter={formatTooltipValue} />
-                      <Tooltip
-                        formatter={(value: number) => [formatTooltipValue(value), yAxisColumn]}
-                        labelStyle={{ color: '#000' }}
-                        contentStyle={{
-                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                          border: '1px solid #ccc',
-                          borderRadius: '4px',
-                        }}
-                      />
-                      <Legend />
-                      <Bar dataKey={yAxisColumn} fill="#8884d8" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  )}
-
-                  {chartType === 'line' && (
-                    <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
-                      <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                      <XAxis
-                        dataKey={xAxisColumn}
-                        tick={{ fontSize: 12 }}
-                        tickFormatter={formatAxisValue}
-                        angle={-45}
-                        textAnchor="end"
-                        height={80}
-                      />
-                      <YAxis tick={{ fontSize: 12 }} tickFormatter={formatTooltipValue} />
-                      <Tooltip
-                        formatter={(value: number) => [formatTooltipValue(value), yAxisColumn]}
-                        labelStyle={{ color: '#000' }}
-                        contentStyle={{
-                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                          border: '1px solid #ccc',
-                          borderRadius: '4px',
-                        }}
-                      />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey={yAxisColumn}
-                        stroke="#8884d8"
-                        strokeWidth={3}
-                        dot={{ fill: '#8884d8', strokeWidth: 2, r: 4 }}
-                        activeDot={{ r: 6, stroke: '#8884d8', strokeWidth: 2 }}
-                      />
-                    </LineChart>
-                  )}
-
-                  {chartType === 'pie' && (
-                    <PieChart margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-                      <Pie
-                        data={chartData.slice(0, 8)}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                        outerRadius={120}
-                        fill="#8884d8"
-                        dataKey="value"
-                      >
-                        {chartData.slice(0, 8).map((_, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        formatter={(value: number) => [formatTooltipValue(value), yAxisColumn]}
-                        contentStyle={{
-                          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                          border: '1px solid #ccc',
-                          borderRadius: '4px',
-                        }}
-                      />
-                      <Legend />
-                    </PieChart>
-                  )}
-                </>
+                {chartType === 'bar' ? (
+                  <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                    <XAxis
+                      dataKey={xAxisColumn}
+                      tick={{ fontSize: 12 }}
+                      tickFormatter={formatAxisValue}
+                      angle={-45}
+                      textAnchor="end"
+                      height={80}
+                    />
+                    <YAxis tick={{ fontSize: 12 }} tickFormatter={formatTooltipValue} />
+                    <Tooltip
+                      formatter={(value: number) => [formatTooltipValue(value), yAxisColumn]}
+                      labelStyle={{ color: '#000' }}
+                      contentStyle={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        border: '1px solid #ccc',
+                        borderRadius: '4px',
+                      }}
+                    />
+                    <Legend />
+                    <Bar dataKey={yAxisColumn} fill="#8884d8" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                ) : chartType === 'line' ? (
+                  <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                    <XAxis
+                      dataKey={xAxisColumn}
+                      tick={{ fontSize: 12 }}
+                      tickFormatter={formatAxisValue}
+                      angle={-45}
+                      textAnchor="end"
+                      height={80}
+                    />
+                    <YAxis tick={{ fontSize: 12 }} tickFormatter={formatTooltipValue} />
+                    <Tooltip
+                      formatter={(value: number) => [formatTooltipValue(value), yAxisColumn]}
+                      labelStyle={{ color: '#000' }}
+                      contentStyle={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        border: '1px solid #ccc',
+                        borderRadius: '4px',
+                      }}
+                    />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey={yAxisColumn}
+                      stroke="#8884d8"
+                      strokeWidth={3}
+                      dot={{ fill: '#8884d8', strokeWidth: 2, r: 4 }}
+                      activeDot={{ r: 6, stroke: '#8884d8', strokeWidth: 2 }}
+                    />
+                  </LineChart>
+                ) : (
+                  <PieChart margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                    <Pie
+                      data={chartData.slice(0, 8)}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={120}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {chartData.slice(0, 8).map((_, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      formatter={(value: number) => [formatTooltipValue(value), yAxisColumn]}
+                      contentStyle={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        border: '1px solid #ccc',
+                        borderRadius: '4px',
+                      }}
+                    />
+                    <Legend />
+                  </PieChart>
+                )}
               </ResponsiveContainer>
             ) : (
               <div className="flex items-center justify-center h-full border-2 border-dashed border-border rounded-lg">
