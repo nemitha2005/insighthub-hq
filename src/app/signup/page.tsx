@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function SignupPage() {
   const footerContent = (
-    <div className="text-center text-muted-foreground text-sm mt-4 font-medium">
+    <div className="text-center text-muted-foreground text-xs sm:text-sm mt-4 font-medium">
       Already have an account?{' '}
       <Link href="/login" className="text-white hover:text-blue-400 transition-colors">
         Log in

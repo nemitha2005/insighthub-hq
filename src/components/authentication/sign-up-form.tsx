@@ -105,31 +105,43 @@ export function SignupForm() {
         e.preventDefault();
         handleSignup();
       }}
-      className={'px-6 md:px-16 pb-6 py-8 gap-6 flex flex-col items-center justify-center'}
+      className={
+        'px-4 sm:px-6 md:px-16 pb-4 sm:pb-6 py-6 sm:py-8 gap-4 sm:gap-6 flex flex-col items-center justify-center'
+      }
     >
-      <Image src={'/assets/icons/logo/insighthub-icon.svg'} alt={'InsightHub'} width={80} height={80} />
-      <div className={'text-[30px] leading-[36px] font-medium tracking-[-0.6px] text-center'}>Create an account</div>
+      <Image
+        src={'/assets/icons/logo/insighthub-icon.svg'}
+        alt={'InsightHub'}
+        width={60}
+        height={60}
+        className="sm:w-20 sm:h-20"
+      />
+      <div
+        className={'text-2xl sm:text-[30px] leading-8 sm:leading-[36px] font-medium tracking-[-0.6px] text-center px-2'}
+      >
+        Create an account
+      </div>
 
       <Button
         onClick={() => handleGoogleSignup()}
         type={'button'}
         variant={'secondary'}
-        className={'w-full mt-6 relative'}
+        className={'w-full mt-4 sm:mt-6 relative'}
         disabled={isLoading}
       >
         {isLoading ? (
-          <Loader2 className="h-5 w-5 animate-spin mr-2" />
+          <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin mr-2" />
         ) : (
           <Image
-            height="24"
-            className={'mr-3'}
-            width="24"
+            height="20"
+            className={'mr-2 sm:mr-3'}
+            width="20"
             src="https://cdn.simpleicons.org/google/ffffff"
             unoptimized={true}
             alt={'Google logo'}
           />
         )}
-        {isLoading ? 'Creating account...' : 'Sign up with Google'}
+        <span className="text-sm sm:text-base">{isLoading ? 'Creating account...' : 'Sign up with Google'}</span>
       </Button>
 
       <div className={'flex w-full items-center justify-center'}>
@@ -146,8 +158,8 @@ export function SignupForm() {
       />
 
       <Button type={'submit'} variant={'secondary'} className={'w-full relative'} disabled={isLoading}>
-        {isLoading && <Loader2 className="h-5 w-5 animate-spin mr-2" />}
-        {isLoading ? 'Creating account...' : 'Sign up'}
+        {isLoading && <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin mr-2" />}
+        <span className="text-sm sm:text-base">{isLoading ? 'Creating account...' : 'Sign up'}</span>
       </Button>
     </form>
   );

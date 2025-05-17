@@ -19,11 +19,11 @@ export function AuthenticationForm({
   return (
     <>
       <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
-        <Label className={'text-muted-foreground leading-5'} htmlFor="email">
+        <Label className={'text-muted-foreground leading-5 text-sm'} htmlFor="email">
           Email address
         </Label>
         <Input
-          className={'border-border rounded-xs'}
+          className={'border-border rounded-xs text-sm sm:text-base'}
           type="email"
           id="email"
           autoComplete={'username'}
@@ -33,11 +33,11 @@ export function AuthenticationForm({
       </div>
       {passwordVisible && (
         <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label className={'text-muted-foreground leading-5'} htmlFor="password">
+          <Label className={'text-muted-foreground leading-5 text-sm'} htmlFor="password">
             Password
           </Label>
           <Input
-            className={'border-border rounded-xs'}
+            className={'border-border rounded-xs text-sm sm:text-base'}
             type="password"
             id="password"
             autoComplete="current-password"

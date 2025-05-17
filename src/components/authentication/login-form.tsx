@@ -137,10 +137,20 @@ export function LoginForm() {
           handleLogin();
         }
       }}
-      className={'px-6 md:px-16 pb-6 py-8 gap-6 flex flex-col items-center justify-center'}
+      className={
+        'px-4 sm:px-6 md:px-16 pb-4 sm:pb-6 py-6 sm:py-8 gap-4 sm:gap-6 flex flex-col items-center justify-center'
+      }
     >
-      <Image src={'/assets/icons/logo/insighthub-icon.svg'} alt={'InsightHub'} width={80} height={80} />
-      <div className={'text-[30px] leading-[36px] font-medium tracking-[-0.6px] text-center'}>
+      <Image
+        src={'/assets/icons/logo/insighthub-icon.svg'}
+        alt={'InsightHub'}
+        width={60}
+        height={60}
+        className="sm:w-20 sm:h-20"
+      />
+      <div
+        className={'text-2xl sm:text-[30px] leading-8 sm:leading-[36px] font-medium tracking-[-0.6px] text-center px-2'}
+      >
         {passwordResetMode ? 'Reset your password' : 'Log in to your account'}
       </div>
 
@@ -150,22 +160,22 @@ export function LoginForm() {
             onClick={() => handleGoogleLogin()}
             type={'button'}
             variant={'secondary'}
-            className={'w-full mt-6 relative'}
+            className={'w-full mt-4 sm:mt-6 relative'}
             disabled={isLoading}
           >
             {isLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin mr-2" />
+              <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin mr-2" />
             ) : (
               <Image
-                height="24"
-                className={'mr-3'}
-                width="24"
+                height="20"
+                className={'mr-2 sm:mr-3'}
+                width="20"
                 src="https://cdn.simpleicons.org/google/ffffff"
                 unoptimized={true}
                 alt={'Google logo'}
               />
             )}
-            {isLoading ? 'Logging in...' : 'Log in with Google'}
+            <span className="text-sm sm:text-base">{isLoading ? 'Logging in...' : 'Log in with Google'}</span>
           </Button>
           <div className={'flex w-full items-center justify-center'}>
             <Separator className={'w-5/12 bg-border'} />
@@ -189,14 +199,16 @@ export function LoginForm() {
         className={'w-full relative'}
         disabled={isLoading || isResettingPassword}
       >
-        {(isLoading || isResettingPassword) && <Loader2 className="h-5 w-5 animate-spin mr-2" />}
-        {isLoading
-          ? 'Logging in...'
-          : isResettingPassword
-            ? 'Sending reset email...'
-            : passwordResetMode
-              ? 'Send reset email'
-              : 'Log in'}
+        {(isLoading || isResettingPassword) && <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin mr-2" />}
+        <span className="text-sm sm:text-base">
+          {isLoading
+            ? 'Logging in...'
+            : isResettingPassword
+              ? 'Sending reset email...'
+              : passwordResetMode
+                ? 'Send reset email'
+                : 'Log in'}
+        </span>
       </Button>
 
       <div className="w-full text-center mt-2">
@@ -204,7 +216,7 @@ export function LoginForm() {
           <Button
             type="button"
             variant="link"
-            className="text-sm text-muted-foreground hover:text-foreground"
+            className="text-xs sm:text-sm text-muted-foreground hover:text-foreground"
             onClick={() => setPasswordResetMode(false)}
           >
             Back to login
@@ -213,7 +225,7 @@ export function LoginForm() {
           <Button
             type="button"
             variant="link"
-            className="text-sm text-muted-foreground hover:text-foreground"
+            className="text-xs sm:text-sm text-muted-foreground hover:text-foreground"
             onClick={() => setPasswordResetMode(true)}
           >
             Forgot password?
