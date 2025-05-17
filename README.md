@@ -2,7 +2,7 @@
 
 <div align="center">
   <p align="center">
-    <img src="https://i.postimg.cc/rsk12HJW/logo.png" alt="InsightHub Logo" width="100" />
+    <img src="https://i.postimg.cc/rsk12HJW/logo.png" alt="InsightHub Logo" width="250" />
   </p>
   
   [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
