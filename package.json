@@ -23,6 +23,7 @@
     "*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@radix-ui/react-accordion": "^1.2.8",
     "@radix-ui/react-dialog": "^1.1.11",
     "@radix-ui/react-dropdown-menu": "^2.1.12",
