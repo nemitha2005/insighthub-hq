@@ -1,7 +1,7 @@
 # 🔮 InsightHub - AI-Powered Business Intelligence Platform
 
 <div align="center">
-  <img src="[https://i.postimg.cc/rsk12HJW/logo.png]" alt="InsightHub Logo" width="200"/>
+  ![Logo](https://i.postimg.cc/rsk12HJW/logo.png)
   
   [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
   [![Next.js](https://img.shields.io/badge/Next.js-15.3.2-black)](https://nextjs.org/)
