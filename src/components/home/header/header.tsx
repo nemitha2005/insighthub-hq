@@ -46,60 +46,61 @@ export default function Header({ user }: Props) {
         scrolled ? 'bg-background/80 backdrop-blur-md border-b border-border/40' : 'bg-transparent'
       }`}
     >
-      <div className="mx-auto max-w-7xl relative px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <div className="mx-auto max-w-7xl relative px-4 sm:px-6 lg:px-8 py-3 md:py-4 flex items-center justify-between">
         <div className="flex flex-1 items-center justify-start">
           <Link className="flex items-center" href="/">
-            <Image src="/logo.svg" width={220} height={34} alt="InsightHub" />
+            <Image src="/logo.svg" width={180} height={28} alt="InsightHub" className="md:w-[220px] md:h-[34px]" />
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex ml-10 space-x-8">
+          <div className="hidden lg:flex ml-8 xl:ml-10 space-x-6 xl:space-x-8">
             <a
               href="#features"
               onClick={(e) => handleNavClick(e, 'features')}
-              className="text-muted-foreground hover:text-foreground transition cursor-pointer"
+              className="text-sm lg:text-base text-muted-foreground hover:text-foreground transition cursor-pointer"
             >
               Features
             </a>
             <a
               href="#benefits"
               onClick={(e) => handleNavClick(e, 'benefits')}
-              className="text-muted-foreground hover:text-foreground transition cursor-pointer"
+              className="text-sm lg:text-base text-muted-foreground hover:text-foreground transition cursor-pointer"
             >
               Benefits
             </a>
             <a
               href="#faq"
               onClick={(e) => handleNavClick(e, 'faq')}
-              className="text-muted-foreground hover:text-foreground transition cursor-pointer"
+              className="text-sm lg:text-base text-muted-foreground hover:text-foreground transition cursor-pointer"
             >
               FAQ
             </a>
           </div>
         </div>
 
-        {/* Mobile Menu Button */}
-        <div className="md:hidden">
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-foreground focus:outline-none">
+        <div className="lg:hidden">
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="text-foreground focus:outline-none p-2 -mr-2"
+            aria-label="Toggle menu"
+          >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
-        {/* Desktop CTA */}
-        <div className="hidden md:flex space-x-4 items-center">
+        <div className="hidden lg:flex space-x-3 xl:space-x-4 items-center">
           {user ? (
             <>
-              <Button variant="secondary" asChild={true} className="mr-2">
+              <Button variant="secondary" asChild={true} className="text-sm lg:text-base">
                 <Link href="/dashboard">Dashboard</Link>
               </Button>
               <ProfileDropdown />
             </>
           ) : (
             <>
-              <Button variant="outline" asChild={true}>
+              <Button variant="outline" asChild={true} className="text-sm lg:text-base">
                 <Link href="/login">Login</Link>
               </Button>
-              <Button asChild={true} variant="secondary">
+              <Button asChild={true} variant="secondary" className="text-sm lg:text-base">
                 <Link href="/signup">Sign Up Free</Link>
               </Button>
             </>
@@ -107,46 +108,47 @@ export default function Header({ user }: Props) {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden bg-background border-t border-border/40 py-4">
-          <div className="flex flex-col space-y-4 px-4">
+        <div className="lg:hidden bg-background/95 backdrop-blur-md border-t border-border/40 py-4 px-4">
+          <div className="flex flex-col space-y-4">
             <a
               href="#features"
               onClick={(e) => handleNavClick(e, 'features')}
-              className="text-foreground hover:text-blue-400 transition cursor-pointer"
+              className="text-base font-medium text-foreground hover:text-blue-400 transition cursor-pointer py-2"
             >
               Features
             </a>
             <a
               href="#benefits"
               onClick={(e) => handleNavClick(e, 'benefits')}
-              className="text-foreground hover:text-blue-400 transition cursor-pointer"
+              className="text-base font-medium text-foreground hover:text-blue-400 transition cursor-pointer py-2"
             >
               Benefits
             </a>
             <a
               href="#faq"
               onClick={(e) => handleNavClick(e, 'faq')}
-              className="text-foreground hover:text-blue-400 transition cursor-pointer"
+              className="text-base font-medium text-foreground hover:text-blue-400 transition cursor-pointer py-2"
             >
               FAQ
             </a>
 
-            <div className="pt-4 flex flex-col space-y-4">
+            <div className="pt-4 border-t border-border/40 flex flex-col space-y-3">
               {user ? (
-                <>
-                  <Button variant="secondary" asChild={true} className="w-full">
+                <div className="flex flex-col space-y-3">
+                  <Button variant="secondary" asChild={true} className="w-full text-base">
                     <Link href="/dashboard">Dashboard</Link>
                   </Button>
-                  <ProfileDropdown />
-                </>
+                  <div className="flex justify-center">
+                    <ProfileDropdown />
+                  </div>
+                </div>
               ) : (
                 <>
-                  <Button variant="outline" asChild={true} className="w-full">
+                  <Button variant="outline" asChild={true} className="w-full text-base">
                     <Link href="/login">Login</Link>
                   </Button>
-                  <Button asChild={true} variant="secondary" className="w-full">
+                  <Button asChild={true} variant="secondary" className="w-full text-base">
                     <Link href="/signup">Sign Up Free</Link>
                   </Button>
                 </>

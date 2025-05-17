@@ -39,26 +39,26 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section id="features" className="py-20 relative overflow-hidden">
+    <section id="features" className="py-12 md:py-20 relative overflow-hidden">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Powerful Features</h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+        <div className="text-center mb-10 md:mb-16">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 px-4">Powerful Features</h2>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4">
             InsightHub combines cutting-edge AI with business intelligence to transform how you analyze your data.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="p-6 rounded-lg border border-border bg-background/50 backdrop-blur-sm hover:border-ring/50 transition duration-300"
+              className="p-4 md:p-6 rounded-lg border border-border bg-background/50 backdrop-blur-sm hover:border-ring/50 transition duration-300"
             >
-              <div className="h-12 w-12 rounded-lg mb-4 flex items-center justify-center bg-background/80 border border-border">
+              <div className="h-10 w-10 md:h-12 md:w-12 rounded-lg mb-3 md:mb-4 flex items-center justify-center bg-background/80 border border-border">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground">{feature.description}</p>
+              <h3 className="text-lg md:text-xl font-semibold mb-2">{feature.title}</h3>
+              <p className="text-sm md:text-base text-muted-foreground">{feature.description}</p>
             </div>
           ))}
         </div>
