@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageCircle, Send, Bot, User, Loader2, BarChart3, TrendingUp, Database, Lightbulb } from 'lucide-react';
+import { MessageCircle, Send, Bot, User, Loader2, BarChart3, TrendingUp, Database, Lightbulb, X } from 'lucide-react';
 import { askAboutData, generateConversationStarters, ConversationResponse } from '@/lib/conversational-ai';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -127,59 +127,60 @@ export function AIChat({ data, columns }: AIChatProps) {
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <Card className="flex flex-col h-[550px] bg-background/50 backdrop-blur-sm border-border">
-        <CardHeader className="border-b border-border pb-4 flex-shrink-0">
-          <CardTitle className="flex items-center gap-2">
-            <MessageCircle className="h-5 w-5 text-blue-500" />
+      <Card className="flex flex-col h-[450px] sm:h-[550px] bg-background/50 backdrop-blur-sm border-border">
+        <CardHeader className="border-b border-border pb-3 sm:pb-4 flex-shrink-0">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 text-blue-500" />
             Chat with Your Data
-            <Badge variant="secondary" className="ml-auto">
+            <Badge variant="secondary" className="ml-auto text-xs">
               {data.length.toLocaleString()} rows
             </Badge>
           </CardTitle>
         </CardHeader>
 
         <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
-          {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
+          <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 min-h-0">
             {messages.map((message) => (
               <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`flex max-w-[80%] ${message.type === 'user' ? 'flex-row-reverse' : 'flex-row'} gap-3`}>
-                  {/* Avatar */}
+                <div
+                  className={`flex max-w-[85%] sm:max-w-[80%] ${message.type === 'user' ? 'flex-row-reverse' : 'flex-row'} gap-2 sm:gap-3`}
+                >
                   <div
-                    className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                    className={`flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center ${
                       message.type === 'user' ? 'bg-blue-500 text-white' : 'bg-green-500 text-white'
                     }`}
                   >
-                    {message.type === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+                    {message.type === 'user' ? (
+                      <User className="h-3 w-3 sm:h-4 sm:w-4" />
+                    ) : (
+                      <Bot className="h-3 w-3 sm:h-4 sm:w-4" />
+                    )}
                   </div>
 
-                  {/* Message Content */}
                   <div
-                    className={`rounded-lg px-4 py-2 ${
+                    className={`rounded-lg px-3 py-2 sm:px-4 sm:py-2 ${
                       message.type === 'user'
                         ? 'bg-blue-500 text-white'
                         : 'bg-background/80 backdrop-blur-sm border border-border text-foreground'
                     }`}
                   >
-                    <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
+                    <p className="text-xs sm:text-sm whitespace-pre-wrap break-words">{message.content}</p>
 
-                    {/* Statistics */}
                     {message.statistics && message.statistics.length > 0 && (
-                      <div className="mt-3 flex flex-wrap gap-2">
+                      <div className="mt-2 sm:mt-3 flex flex-wrap gap-1 sm:gap-2">
                         {message.statistics.map((stat, index) => (
                           <Badge key={index} variant="outline" className="text-xs border-border">
-                            <BarChart3 className="h-3 w-3 mr-1" />
+                            <BarChart3 className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
                             {stat.label}: {stat.value}
                           </Badge>
                         ))}
                       </div>
                     )}
 
-                    {/* Insights */}
                     {message.insights && message.insights.length > 0 && (
-                      <div className="mt-3 space-y-1">
+                      <div className="mt-2 sm:mt-3 space-y-1">
                         <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
-                          <Lightbulb className="h-3 w-3" />
+                          <Lightbulb className="h-2 w-2 sm:h-3 sm:w-3" />
                           Insights
                         </div>
                         {message.insights.map((insight, index) => (
@@ -193,75 +194,109 @@ export function AIChat({ data, columns }: AIChatProps) {
                       </div>
                     )}
 
-                    <p className="text-xs text-muted-foreground mt-2">{formatTimestamp(message.timestamp)}</p>
+                    <p className="text-xs text-muted-foreground mt-1 sm:mt-2">{formatTimestamp(message.timestamp)}</p>
                   </div>
                 </div>
               </div>
             ))}
 
-            {/* Loading indicator */}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center">
-                    <Bot className="h-4 w-4" />
+                <div className="flex gap-2 sm:gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-green-500 text-white flex items-center justify-center">
+                    <Bot className="h-3 w-3 sm:h-4 sm:w-4" />
                   </div>
-                  <div className="bg-background/80 backdrop-blur-sm border border-border rounded-lg px-4 py-2">
+                  <div className="bg-background/80 backdrop-blur-sm border border-border rounded-lg px-3 py-2 sm:px-4 sm:py-2">
                     <div className="flex items-center gap-2">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span className="text-sm text-muted-foreground">Analyzing your data...</span>
+                      <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
+                      <span className="text-xs sm:text-sm text-muted-foreground">Analyzing your data...</span>
                     </div>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Scroll anchor */}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Conversation Starters */}
           {showStarters && conversationStarters.length > 0 && (
-            <div className="border-t border-b border-border p-4 bg-background/30 backdrop-blur-sm flex-shrink-0">
-              <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
-                <TrendingUp className="h-4 w-4" />
-                Try asking:
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {conversationStarters.map((starter, index) => (
+            <div className="border-t border-border p-2 sm:p-4 bg-background/30 backdrop-blur-sm flex-shrink-0 max-h-[120px] sm:max-h-none overflow-hidden">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="text-xs sm:text-sm font-medium flex items-center gap-2">
+                  <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
+                  Try asking:
+                </h4>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowStarters(false)}
+                  className="h-6 w-6 p-0 sm:hidden hover:bg-background/80"
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
+
+              <div className="flex sm:grid sm:grid-cols-2 gap-1 sm:gap-2 overflow-x-auto sm:overflow-x-visible">
+                <div className="flex gap-1 sm:contents">
+                  {conversationStarters.slice(0, 2).map((starter, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleStarterClick(starter)}
+                      disabled={isLoading}
+                      className="text-xs h-6 sm:h-8 border-border hover:bg-background/80 flex-shrink-0 px-2 sm:px-3 sm:justify-start sm:text-left"
+                    >
+                      <span className="truncate max-w-[120px] sm:max-w-none">{starter}</span>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="hidden sm:flex sm:grid sm:grid-cols-2 gap-2 mt-2">
+                {conversationStarters.slice(2).map((starter, index) => (
                   <Button
-                    key={index}
+                    key={index + 2}
                     variant="outline"
                     size="sm"
                     onClick={() => handleStarterClick(starter)}
                     disabled={isLoading}
-                    className="text-xs h-8 border-border hover:bg-background/80"
+                    className="text-xs h-8 border-border hover:bg-background/80 justify-start text-left"
                   >
-                    {starter}
+                    <span className="truncate">{starter}</span>
                   </Button>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Input Form */}
-          <div className="border-t border-border p-4 flex-shrink-0 bg-background/50 backdrop-blur-sm">
+          <div className="border-t border-border p-3 sm:p-4 flex-shrink-0 bg-background/50 backdrop-blur-sm">
             <form onSubmit={handleFormSubmit} className="flex gap-2">
               <Input
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Ask about your data: 'What's the average salary?' or 'Show me patterns'"
+                placeholder="Ask about your data..."
                 disabled={isLoading}
-                className="flex-1 bg-background border-border"
+                className="flex-1 bg-background border-border text-xs sm:text-sm"
               />
-              <Button type="submit" disabled={isLoading || !inputValue.trim()} size="icon" variant="secondary">
-                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              <Button
+                type="submit"
+                disabled={isLoading || !inputValue.trim()}
+                size="icon"
+                variant="secondary"
+                className="flex-shrink-0"
+              >
+                {isLoading ? (
+                  <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
+                ) : (
+                  <Send className="h-3 w-3 sm:h-4 sm:w-4" />
+                )}
               </Button>
             </form>
 
             <div className="mt-2 text-xs text-muted-foreground">
               <p className="flex items-center gap-1">
-                <Database className="h-3 w-3" />
+                <Database className="h-2 w-2 sm:h-3 sm:w-3" />
                 Analyzing {data.length.toLocaleString()} records across {columns.length} columns
               </p>
             </div>

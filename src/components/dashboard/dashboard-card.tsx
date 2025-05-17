@@ -20,10 +20,10 @@ export function DashboardCard({ title, children, className, featured = false }: 
       )}
     >
       {featured && <DashboardCardGradient />}
-      <div className="border-b border-border p-5 bg-background/80">
-        <h3 className={cn('text-xl font-semibold', featured && 'text-yellow-300')}>{title}</h3>
+      <div className="border-b border-border p-3 sm:p-5 bg-background/80">
+        <h3 className={cn('text-lg sm:text-xl font-semibold', featured && 'text-yellow-300')}>{title}</h3>
       </div>
-      <div className="p-5">{children}</div>
+      <div className="p-3 sm:p-5">{children}</div>
     </div>
   );
 }

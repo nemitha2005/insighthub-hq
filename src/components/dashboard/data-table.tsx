@@ -56,8 +56,8 @@ export function DashboardDataTable({ data }: DashboardDataTableProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div className="relative w-full max-w-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+        <div className="relative w-full sm:w-auto sm:max-w-sm">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search data..."
@@ -69,7 +69,7 @@ export function DashboardDataTable({ data }: DashboardDataTableProps) {
             }}
           />
         </div>
-        <div className="text-sm text-muted-foreground">
+        <div className="text-xs sm:text-sm text-muted-foreground">
           {filteredData.length} {filteredData.length === 1 ? 'row' : 'rows'}
         </div>
       </div>
@@ -80,7 +80,9 @@ export function DashboardDataTable({ data }: DashboardDataTableProps) {
             <TableHeader>
               <TableRow>
                 {columns.map((column) => (
-                  <TableHead key={column}>{column}</TableHead>
+                  <TableHead key={column} className="text-xs sm:text-sm font-medium whitespace-nowrap">
+                    {column}
+                  </TableHead>
                 ))}
               </TableRow>
             </TableHeader>
@@ -89,13 +91,15 @@ export function DashboardDataTable({ data }: DashboardDataTableProps) {
                 paginatedData.map((row, rowIndex) => (
                   <TableRow key={rowIndex}>
                     {columns.map((column) => (
-                      <TableCell key={`${rowIndex}-${column}`}>{formatCellValue(row[column])}</TableCell>
+                      <TableCell key={`${rowIndex}-${column}`} className="text-xs sm:text-sm whitespace-nowrap">
+                        <div className="max-w-[150px] sm:max-w-none truncate">{formatCellValue(row[column])}</div>
+                      </TableCell>
                     ))}
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                  <TableCell colSpan={columns.length} className="h-24 text-center text-sm">
                     {searchTerm ? 'No matching results' : 'No data available'}
                   </TableCell>
                 </TableRow>
@@ -106,18 +110,20 @@ export function DashboardDataTable({ data }: DashboardDataTableProps) {
       </div>
 
       {totalPages > 1 && (
-        <div className="flex justify-between items-center mt-4">
-          <div className="text-sm text-muted-foreground">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0 mt-4">
+          <div className="text-xs sm:text-sm text-muted-foreground">
             Page {currentPage} of {totalPages}
           </div>
           <div className="flex space-x-2">
             <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={currentPage === 1}>
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              Previous
+              <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+              <span className="hidden sm:inline">Previous</span>
+              <span className="sm:hidden">Prev</span>
             </Button>
             <Button variant="outline" size="sm" onClick={handleNextPage} disabled={currentPage === totalPages}>
-              Next
-              <ChevronRight className="h-4 w-4 ml-1" />
+              <span className="hidden sm:inline">Next</span>
+              <span className="sm:hidden">Next</span>
+              <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1" />
             </Button>
           </div>
         </div>
